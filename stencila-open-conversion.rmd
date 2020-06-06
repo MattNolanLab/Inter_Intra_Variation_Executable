@@ -1,4 +1,16 @@
 ---
+title: "Pastoletal2002_executable"
+author: "Matt"
+date: "06/06/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+---
 authors:
   - type: Person
     affiliations:
@@ -3089,6 +3101,10 @@ Before addressing intra- and inter-animal variability, we first describe the dat
 
 
 Because SCs are found intermingled with pyramidal cells in layer 2 (L2PCs), and as misclassification of L2PCs as SCs would probably confound investigation of intra-SC variation, we validated our criteria for distinguishing each cell type. To establish characteristic electrophysiological properties of L2PCs, we recorded from neurons in layer 2 that were identified by Cre-dependent marker expression in a _Wfs1_^Cre^ mouse line (@bib72). Expression of Cre in this line, and in a similar line (@bib44), labels L2PCs that project to the CA1 region of the hippocampus, but does not label SCs (@bib44; @bib72). We identified two populations of neurons in layer 2 of MEC that were labelled in _Wfs1_^Cre^ mice ([Figure 3A–C](#fig3)). The more numerous population had properties consistent with L2PCs ([Figure 3A,G](#fig3)) and could be separated from the unidentified population on the basis of a lower rheobase ([Figure 3C](#fig3)). The unidentified population had firing properties that were typical of layer 2 interneurons (@bib37). A principal component analysis (PCA) ([Figure 3D–F](#fig3)) clearly separated the L2PC population from the SC population, but did not identify subpopulations of SCs. The properties of the less numerous population were also clearly distinct from those of SCs ([Figure 3A,C](#fig3)). These data demonstrate that the SC population used for our analyses is distinct from other cell types also found in layer 2 of the MEC.
+
+figure: Figure 2.
+:::
+![](stencila-open-conversion.rmd.media/fig2.jpg){inline}
 
 figure: Figure 3.
 :::
