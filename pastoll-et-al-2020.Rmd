@@ -181,7 +181,8 @@ references: pastoll-et-al-2020.references.bib
 ---
 
 ```{r Setup}
-library(tidyverse)
+library(tidyverse,
+        cowplot)
 source("Functions.R")
 
 # Load stellate cell data
@@ -228,10 +229,102 @@ The concept of cell types provides a general organizing principle for understand
 
 (ref:figure1) Figure 1. **Classification and variability of neuronal cell types.** (**A**) Neuronal cell types are identifiable by features clustering around a distinct point (blue, green and yellow) or a line (orange) in feature space. The clustering implies that neuron types are defined by either a single set point (blue, green and yellow) or by multiple set points spread along a line (orange). (**B**) Phenotypic variability of a single neuron type could result from distinct set points that subdivide the neuron type but appear continuous when data from multiple animals are combined (modular), from differences in components of a set point that do not extend along a continuum but that in different animals cluster at different locations in feature space (orthogonal), or from differences between animals in the range covered by a continuum of set points (offset). These distinct forms of variability can only be made apparent by measuring the features of many neurons from multiple animals.
 
-```{r Figure 1}
+```{r Figure 1A}
+# Make cell distributions for each 'cell type'
+numcells <- 100
+Cell_A <- tibble(x = rnorm(numcells, 10, 1),
+                       y = rnorm(numcells, 12, 1),
+                       cell = "A")
+Cell_B <- tibble(x = runif(numcells, min = 20, max = 40) + rnorm(numcells,0,1),
+                       y = rnorm(numcells, 25, 2),
+                       cell = "B")
+Cell_C <- tibble(x = rnorm(numcells, 10, 2),
+                       y = rnorm(numcells, 35, 2),
+                       cell = "C")
+Cell_D <- tibble(x = rnorm(numcells, 30, 2),
+                       y = rnorm(numcells, 10, 2),
+                       cell = "D")
+ 
+CellFeatures <- bind_rows(Cell_A, Cell_B, Cell_C, Cell_D)
+
+# Plot 'cell features' using a colour blind friendly palette (from http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/).
+cbPalette <- c("#E69F00", "#D55E00", "#56B4E9", "#009E73")
+
+CF_plot <- ggplot(CellFeatures, aes(x, y, colour = cell)) +
+  geom_point() +
+  xlim(0,45) +
+  ylim(0,45) +
+  labs(x = "Feature 1", y = "Feature 2", colour = "Cell Type", title = "Cell type separation") +
+  scale_colour_manual(values=cbPalette) +
+  theme_classic() +
+  theme(legend.position = "bottom",
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        legend.text = element_blank())
+CF_plot
 
 ```
 
+```{r Figure 1B}
+# Example 'modular' data
+numcells <- 20
+MF_A <- tibble(x = c(rnorm(numcells, 26, 0.5), rnorm(numcells, 31, 0.5), rnorm(numcells, 36, 0.5)),
+                   y = rnorm(numcells*3, 25, 2),
+                   animal = "1")
+MF_B <- tibble(x = c(rnorm(numcells, 28.5, 0.5), rnorm(numcells, 33.5, 0.5), rnorm(numcells, 38.5, 0.5)),
+                    y = rnorm(numcells*3, 25, 2),
+                    animal = "2")
+                   
+ModularFeatures <- rbind(MF_A, MF_B)
+
+# Example 'orthogonal' data
+numcells <- 60
+
+OOF_A <- tibble(x = runif(numcells, min = 25, max = 40) + rnorm(numcells,0,1),
+                y = rnorm(numcells, 23, 1),
+                animal = "1")
+OOF_B <- tibble(x = runif(numcells, min = 25, max = 40) + rnorm(numcells,0,1),
+                y = rnorm(numcells, 27, 1),
+                animal = "2")
+     
+OrthogOffsetFeatures <- rbind(OOF_A, OOF_B)
+
+# Example offset data
+numcells <- 60
+
+LOF_A <- tibble(x = runif(numcells, min = 25, max = 35) + rnorm(numcells,0,1),
+                y = rnorm(numcells, 25, 2),
+                animal = "1")
+LOF_B <- tibble(x = runif(numcells, min = 30, max = 40) + rnorm(numcells,0,1),
+                y = rnorm(numcells, 25, 2),
+                animal = "2")
+LinearOffsetFeatures <- rbind(LOF_A, LOF_B)
+
+# Combine into a plot
+ModularFeatures$scheme <- "modular"
+OrthogOffsetFeatures$scheme <- "orthog"
+LinearOffsetFeatures$scheme <- "offset"
+IntraAnimal <- bind_rows(ModularFeatures, OrthogOffsetFeatures, LinearOffsetFeatures)
+IntraAnimal$scheme <- as.factor(IntraAnimal$scheme)
+IntraAnimal$scheme = factor(IntraAnimal$scheme, c("modular", "orthog","offset"))
+labels_schemes <- c(modular = "Modular", orthog = "Orthogonal", offset = "Offset")
+
+IntraAnimalPlot <- ggplot(IntraAnimal, aes(x, y, alpha = animal)) +
+  geom_point(colour = cbPalette[2]) +
+  xlim(20,45) +
+  ylim(20,30) +
+  labs(x = "Feature 1", y = "Feature 2", alpha = "Animal", title = "Within cell type variability") +
+  facet_wrap(~scheme, nrow = 3, labeller = labeller(scheme = labels_schemes)) +
+  theme_classic() +
+  theme(strip.background = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank()) +
+  scale_alpha_discrete(range=c(0.1,1)) +
+  theme(legend.position = "bottom",
+        legend.text = element_blank())
+
+IntraAnimalPlot
+```
 
 
 
