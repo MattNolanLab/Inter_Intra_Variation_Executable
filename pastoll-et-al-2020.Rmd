@@ -265,7 +265,7 @@ CF_plot
 
 ```
 
-```{r Figure 1B}
+```{r Figure 1B, warning=FALSE}
 # Example 'modular' data
 numcells <- 20
 MF_A <- tibble(x = c(rnorm(numcells, 26, 0.5), rnorm(numcells, 31, 0.5), rnorm(numcells, 36, 0.5)),
