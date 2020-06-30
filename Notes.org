@@ -21,17 +21,22 @@ Insert code blocks into the R markdown document. Stencila will convert this docu
 ** Questions
 
 *** <2020-06-30 Tue>
-- Is there a package I can use to make references compile when I knit the document?
 
-- How best to refer to figures?
-At the moment the document links to and loads an image stored in .media.
+****  When I Knit pastoll-et-al.Rmd the references are given as ???.
+Adding, in the header section, the line 'bibliography: pastoll-et-al-2020.references.bib' fixes this. Would be nice not to have to do this. Presumable 'references: pastoll-et-al-2020.references.bib'  is not read by Knitr.
 
-**** Option 1
+**** Wish list: it would be great to have an RStudio extension to build an eLife version of the document. 
+This might work in the same way as Knit or Bookdown commands.
+
+**** How best to refer to figures?
+Goal: At the moment the document links to and loads an image stored in .media. Nokome previously indicated we'd like to replace this with a link to the code. This is option 1 below. I think it has some disadvantages. I've suggested an alternative.
+
+***** Option 1
 Link to the code from within the figure legend. Clicking the link for a particular panel runs the code and plots a new version of the panel. The link in the text could reference the code chink rather than the figure.
 Advantages: the figures are already visible without seeing code; keeping the original panel could be useful for comparison with panels generated after changing the code;  does not require all panels to be converted to code.
 Disadvantages: end up with multiple versions of the same plot. The original panel may look (or be) different to the code generated panel.
 
-**** Option 2
+***** Option 2
 Link to the code from within the text. Original panels removed from the document. The link in the text would reference the code block in the same way that figures are referenced in a Bookdown document.
 Advantages: only one version of each panel, code exectuable from main text
 Disadvantages: delay between clicking the link and seeing the figure could be very long (would not promote readability); because many figures have multiple panels that relate to one another, it would either be necessary to click on links to each panel (E.g. Figure 1A and then Figure 1B) if you want to see both, or if one link runs code for all panels it would be necessary to wait for each panel to be generated, or there would need to be multiple links (e.g. Figure 1, and Figure 1A) or some kind of menu; formats for raw (unprocessed) data in  some figure panels are not easily loaded into or viewed in R / Python, e.g. left panels in Figure 2A-C. 
@@ -56,3 +61,8 @@ NB: Yes, absolutely, they will also get included in the project so they are avai
 - Is there a quick way to convert the document back to the final format so I can check things are ok as I go along?
 As mentioned above, you can use Encoda for this. If you don not have Node.js installed and would prefer a standalone executable let us know and we should be able to prioritixze a new release of the Stencila CLI (which includes Encoda).
 - Minor. Having the bibliography at the top of the .Rmd document is a bit annoying. Will it break things later if I move it? Can it be loaded from a separate document?
+
+** To do
+
+*** Figure 3B
+This looks pretty ugly. Update figure labels, etc.xs

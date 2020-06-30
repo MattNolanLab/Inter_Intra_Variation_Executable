@@ -203,7 +203,7 @@ data.sc$counts <- counts$n[match(data.sc$id, counts$id)]
 col_facs <- c("id", "hemi", "housing", "mlpos", "expr", "patchdir")
 data.sc[col_facs] <- lapply(data.sc[col_facs], factor)
 
-# Load data from WFs1+ve cells
+# Load data from Wfs1+ve cells
 fname.wfs <- "Data/datatable_cal.txt"
 data.import.wfs <- read_tsv(fname.wfs)
 data.wfs <- data.import.wfs %>% drop_na(dvloc)
@@ -216,6 +216,13 @@ data.sc_r <- data.sc %>%
   group_by(property) %>%
   nest %>%
   ungroup
+
+# Convert Wfs1+ve cell data to tidy format.
+data.wfs_r <- filter(data.wfs, classification == "Pyr") %>%
+  select(-classification) %>%
+  gather("property", "value", vm:fi) %>%
+  group_by(property) %>%
+  nest()
 
 ```
 
@@ -374,6 +381,23 @@ Because SCs are found intermingled with pyramidal cells in layer 2 (L2PCs), and 
 
 (ref:figure3) Figure 3. **Distinct and dorsoventrally organized properties of layer 2 stellate cells.** (**A**) Representative action potential after hyperpolarization waveforms from a SC (left), a pyramidal cell (middle) and an unidentified cell (right). The pyramidal and unidentified cells were both positively labelled in _Wfs1^C^_^re^ mice. (**B**) Plot of the first versus the second principal component from PCA of the properties of labelled neurons in _Wfs1_^Cre^ mice reveals two populations of neurons. (**C**) Histogram showing the distribution of rheobase values of cells positively labelled in _Wfs1_^Cre^ mice. The two groups identified in panel (B) can be distinguished by their rheobase. (**D**) Plot of the first two principal components from PCA of the properties of the L2PC (n = 44, green) and SC populations (n = 836, black). Putative pyramidal cells (x) and SCs (+) are colored according to their dorsoventral location (inset shows the scale). (**E**) Proportion of total variance explained by the first five principal components for the analysis in panel (**D**). (**F**) Histograms of the locations of recorded SCs (upper) and L2PCs (lower). (**G**) All values of measured features from all mice are plotted as a function of the dorsoventral location of the recorded cells. Lines indicate fits of a linear model to the complete datasets for SCs (black) and L2PCs (green). Putative pyramidal cells (x, green) and SCs (+, black). Adjusted R^2^ values use the same color scheme.
 
+```{r Figure 3B, warning=FALSE}
+plot_sc_wfs <- data.sc %>%
+  select(vm:fi, dvlocmm) %>%
+  mutate(classification = "SC")
+plot_wfs <- data.wfs %>%
+  select(vm:fi, dvlocmm, classification)
+plot_sc_wfs <- bind_rows(plot_sc_wfs, plot_wfs) %>%
+  gather("property", "value", vm:fi)
+
+ggplot(plot_sc_wfs, aes(dvlocmm,value)) +
+  geom_point(aes(colour = classification)) +
+  facet_wrap(~property, scales = "free_y") +
+  theme_classic() +
+  theme(strip.background = element_blank())
+```
+
+
 To further validate the large SC dataset, we assessed the location-dependence of individual electrophysiological features, several of which have previously been found to depend on the dorso-ventral location of the recorded neuron (@bib10; @bib11; @bib28; @bib30; @bib58; @bib83). We initially fit the dependence of each feature on dorsoventral position using a standard linear regression model. We found substantial (adjusted R^2^ >0.1) dorsoventral gradients in input resistance, sag, membrane time constant, resonant frequency, rheobase and the current-frequency (I-F) relationship ([Figure 3G](#fig3)). In contrast to the situation in SCs, we did not find evidence for dorsoventral organization of these features in L2PCs ([Figure 3G](#fig3)). Thus, our large dataset replicates the previously observed dependence of integrative properties of SCs on their dorsoventral position, and shows that this location dependence further distinguishes SCs from L2PCs.
 
 ## Inter-animal differences in the intrinsic properties of stellate cells
@@ -383,6 +407,11 @@ To what extent does variability between the integrative properties of SCs at a g
 ![](pastoll-et-al-2020.Rmd.media/fig4.jpg){fig.cap="(ref:figure4)"}
 
 (ref:figure4) Figure 4. **Inter-animal variability and dependence on environment of intrinsic properties of stellate cells.** (**A**) Examples of rheobase as a function of dorsoventral position for two mice. (**B, C**) Each line is the fit of simulated data from a different subject for datasets in which there is no inter-subject variability (**B**) or in which intersubject variability is present (**C**). Fitting data from each subject independently with linear regression models suggests intersubject variation in both datasets (left). By contrast, after fitting mixed effect models (right) intersubject variation is no longer suggested for the dataset in which it is absent (**B**) but remains for the dataset in which it is present (**C**). (**D**) Each line is the fit of rheobase as a function of dorsoventral location for a single mouse. The fits were carried out independently for each mouse (left) or using a mixed effect model with mouse identity as a random effect (right). (**E**) The intercept (I), sum of the intercept and slope (I + S), and slopes realigned to a common intercept (right) for each mouse obtained by fitting mixed effect models for each property as a function of dorsoventral position.
+
+```{r Figure 4A}
+
+```
+
 
 ![](pastoll-et-al-2020.Rmd.media/fig4-figsupp1.jpg){fig.cap="(ref:figure4figuresupplement1)"}
 
