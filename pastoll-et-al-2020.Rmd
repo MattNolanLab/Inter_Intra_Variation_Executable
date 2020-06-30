@@ -1,89 +1,16 @@
 ---
-authors:
-  - givenNames:
-      - Hugh
-    familyNames:
-      - Pastoll
-    type: Person
-    affiliations:
-      - name: 'Centre for Discovery Brain Sciences, University of Edinburgh'
-        address:
-          addressCountry: United Kingdom
-          addressLocality: Edinburgh
-          type: PostalAddress
-        type: Organization
-  - givenNames:
-      - Derek
-      - L
-    familyNames:
-      - Garden
-    type: Person
-    affiliations:
-      - name: 'Centre for Discovery Brain Sciences, University of Edinburgh'
-        address:
-          addressCountry: United Kingdom
-          addressLocality: Edinburgh
-          type: PostalAddress
-        type: Organization
-  - givenNames:
-      - Ioannis
-    familyNames:
-      - Papastathopoulos
-    type: Person
-    affiliations:
-      - name: The Alan Turing Institute
-        address:
-          addressCountry: United States
-          addressLocality: London
-          type: PostalAddress
-        type: Organization
-      - name: >-
-          School of Mathematics, Maxwell Institute and Centre for Statistics,
-          University of Edinburgh
-        address:
-          addressCountry: United Kingdom
-          addressLocality: Edinburgh
-          type: PostalAddress
-        type: Organization
-  - givenNames:
-      - Gülşen
-    familyNames:
-      - Sürmeli
-    type: Person
-    affiliations:
-      - name: 'Centre for Discovery Brain Sciences, University of Edinburgh'
-        address:
-          addressCountry: United Kingdom
-          addressLocality: Edinburgh
-          type: PostalAddress
-        type: Organization
-  - givenNames:
-      - Matthew
-      - F
-    familyNames:
-      - Nolan
-    type: Person
-    emails:
-      - mattnolan@ed.ac.uk
-    affiliations:
-      - name: 'Centre for Discovery Brain Sciences, University of Edinburgh'
-        address:
-          addressCountry: United Kingdom
-          addressLocality: Edinburgh
-          type: PostalAddress
-        type: Organization
+title: Inter- and intra-animal variation in the integrative properties of stellate
+  cells in the medial entorhinal cortex
 editors:
-  - givenNames:
-      - Lisa
-    familyNames:
-      - Giocomo
-    type: Person
-    affiliations:
-      - name: Stanford School of Medicine
-        address:
-          addressCountry: United States
-          type: PostalAddress
-        type: Organization
+- givenNames: Lisa
+  familyNames: Giocomo
+  type: Person
+  affiliations:
+  - name: Stanford School of Medicine
+    address:
+      addressCountry: United States
+      type: PostalAddress
+    type: Organization
 datePublished:
   value: '2020-02-13'
   type: Date
@@ -93,112 +20,205 @@ dateReceived:
 dateAccepted:
   value: '2020-02-04'
   type: Date
-title: >-
-  Inter- and intra-animal variation in the integrative properties of stellate
-  cells in the medial entorhinal cortex
+authors:
+- givenNames: Hugh
+  familyNames: Pastoll
+  type: Person
+  affiliations:
+  - name: Centre for Discovery Brain Sciences, University of Edinburgh
+    address:
+      addressCountry: United Kingdom
+      addressLocality: Edinburgh
+      type: PostalAddress
+    type: Organization
+- givenNames:
+  - Derek
+  - L
+  familyNames: Garden
+  type: Person
+  affiliations:
+  - name: Centre for Discovery Brain Sciences, University of Edinburgh
+    address:
+      addressCountry: United Kingdom
+      addressLocality: Edinburgh
+      type: PostalAddress
+    type: Organization
+- givenNames: Ioannis
+  familyNames: Papastathopoulos
+  type: Person
+  affiliations:
+  - name: The Alan Turing Institute
+    address:
+      addressCountry: United States
+      addressLocality: London
+      type: PostalAddress
+    type: Organization
+  - name: School of Mathematics, Maxwell Institute and Centre for Statistics, University
+      of Edinburgh
+    address:
+      addressCountry: United Kingdom
+      addressLocality: Edinburgh
+      type: PostalAddress
+    type: Organization
+- givenNames: Gülşen
+  familyNames: Sürmeli
+  type: Person
+  affiliations:
+  - name: Centre for Discovery Brain Sciences, University of Edinburgh
+    address:
+      addressCountry: United Kingdom
+      addressLocality: Edinburgh
+      type: PostalAddress
+    type: Organization
+- givenNames:
+  - Matthew
+  - F
+  familyNames: Nolan
+  type: Person
+  emails: mattnolan@ed.ac.uk
+  affiliations:
+  - name: Centre for Discovery Brain Sciences, University of Edinburgh
+    address:
+      addressCountry: United Kingdom
+      addressLocality: Edinburgh
+      type: PostalAddress
+    type: Organization
 description:
-  - content:
-      - >-
-        Distinctions between cell types underpin organizational principles for
-        nervous system function. Functional variation also exists between
-        neurons of the same type. This is exemplified by correspondence between
-        grid cell spatial scales and the synaptic integrative properties of
-        stellate cells (SCs) in the medial entorhinal cortex. However, we know
-        little about how functional variability is structured either within or
-        between individuals. Using ex-vivo patch-clamp recordings from up to 55
-        SCs per mouse, we found that integrative properties vary between mice
-        and, in contrast to the modularity of grid cell spatial scales, have a
-        continuous dorsoventral organization. Our results constrain mechanisms
-        for modular grid firing and provide evidence for inter-animal phenotypic
-        variability among neurons of the same type. We suggest that neuron type
-        properties are tuned to circuit-level set points that vary within and
-        between animals.
-    type: Paragraph
+- content: Distinctions between cell types underpin organizational principles for
+    nervous system function. Functional variation also exists between neurons of the
+    same type. This is exemplified by correspondence between grid cell spatial scales
+    and the synaptic integrative properties of stellate cells (SCs) in the medial
+    entorhinal cortex. However, we know little about how functional variability is
+    structured either within or between individuals. Using ex-vivo patch-clamp recordings
+    from up to 55 SCs per mouse, we found that integrative properties vary between
+    mice and, in contrast to the modularity of grid cell spatial scales, have a continuous
+    dorsoventral organization. Our results constrain mechanisms for modular grid firing
+    and provide evidence for inter-animal phenotypic variability among neurons of
+    the same type. We suggest that neuron type properties are tuned to circuit-level
+    set points that vary within and between animals.
+  type: Paragraph
 isPartOf:
   volumeNumber: '9'
   isPartOf:
     title: eLife
-    issns:
-      - 2050-084X
+    issns: 2050-084X
     identifiers:
-      - name: nlm-ta
-        propertyID: 'https://registry.identifiers.org/registry/nlm-ta'
-        value: elife
-        type: PropertyValue
-      - name: publisher-id
-        propertyID: 'https://registry.identifiers.org/registry/publisher-id'
-        value: eLife
-        type: PropertyValue
+    - name: nlm-ta
+      propertyID: https://registry.identifiers.org/registry/nlm-ta
+      value: elife
+      type: PropertyValue
+    - name: publisher-id
+      propertyID: https://registry.identifiers.org/registry/publisher-id
+      value: eLife
+      type: PropertyValue
     publisher:
-      name: 'eLife Sciences Publications, Ltd'
+      name: eLife Sciences Publications, Ltd
       type: Organization
     type: Periodical
   type: PublicationVolume
 licenses:
-  - url: 'http://creativecommons.org/licenses/by/4.0/'
-    content:
-      - content:
-          - 'This article is distributed under the terms of the '
-          - content:
-              - Creative Commons Attribution License
-            target: 'http://creativecommons.org/licenses/by/4.0/'
-            type: Link
-          - >-
-            , which permits unrestricted use and redistribution provided that
-            the original author and source are credited.
-        type: Paragraph
-    type: CreativeWork
+- url: http://creativecommons.org/licenses/by/4.0/
+  content:
+  - content:
+    - 'This article is distributed under the terms of the '
+    - ', which permits unrestricted use and redistribution provided that the original
+      author and source are credited.'
+    - content: Creative Commons Attribution License
+      target: http://creativecommons.org/licenses/by/4.0/
+      type: Link
+    type: Paragraph
+  type: CreativeWork
 keywords:
-  - entorhinal cortex
-  - synaptic integration
-  - presynaptic function
-  - multi-vesicular release
-  - synaptic vesicle
-  - Mouse
+- entorhinal cortex
+- synaptic integration
+- presynaptic function
+- multi-vesicular release
+- synaptic vesicle
+- Mouse
 identifiers:
-  - name: publisher-id
-    propertyID: 'https://registry.identifiers.org/registry/publisher-id'
-    value: '52258'
-    type: PropertyValue
-  - name: doi
-    propertyID: 'https://registry.identifiers.org/registry/doi'
-    value: 10.7554/eLife.52258
-    type: PropertyValue
-  - name: elocation-id
-    propertyID: 'https://registry.identifiers.org/registry/elocation-id'
-    value: e52258
-    type: PropertyValue
+- name: publisher-id
+  propertyID: https://registry.identifiers.org/registry/publisher-id
+  value: '52258'
+  type: PropertyValue
+- name: doi
+  propertyID: https://registry.identifiers.org/registry/doi
+  value: 10.7554/eLife.52258
+  type: PropertyValue
+- name: elocation-id
+  propertyID: https://registry.identifiers.org/registry/elocation-id
+  value: e52258
+  type: PropertyValue
 fundedBy:
-  - identifiers:
-      - value: 200855/Z/16/Z
-        type: PropertyValue
-    funders:
-      - name: Biotechnology and Biological Sciences Research Council (BBSRC)
-        type: Organization
-    type: MonetaryGrant
-  - identifiers:
-      - value: BB/1022147/1
-        type: PropertyValue
-    funders:
-      - name: Biotechnology and Biological Sciences Research Council (BBSRC)
-        type: Organization
-    type: MonetaryGrant
-  - identifiers:
-      - value: BB/H020284/1
-        type: PropertyValue
-    funders:
-      - name: Biotechnology and Biological Sciences Research Council
-        type: Organization
-    type: MonetaryGrant
-  - identifiers:
-      - value: 200855/Z/16/Z
-        type: PropertyValue
-    funders:
-      - name: Wellcome
-        type: Organization
-    type: MonetaryGrant
+- identifiers:
+  - value: 200855/Z/16/Z
+    type: PropertyValue
+  funders:
+  - name: Biotechnology and Biological Sciences Research Council (BBSRC)
+    type: Organization
+  type: MonetaryGrant
+- identifiers:
+  - value: BB/1022147/1
+    type: PropertyValue
+  funders:
+  - name: Biotechnology and Biological Sciences Research Council (BBSRC)
+    type: Organization
+  type: MonetaryGrant
+- identifiers:
+  - value: BB/H020284/1
+    type: PropertyValue
+  funders:
+  - name: Biotechnology and Biological Sciences Research Council
+    type: Organization
+  type: MonetaryGrant
+- identifiers:
+  - value: 200855/Z/16/Z
+    type: PropertyValue
+  funders:
+  - name: Wellcome
+    type: Organization
+  type: MonetaryGrant
 references: pastoll-et-al-2020.references.bib
 ---
+
+```{r Setup}
+library(tidyverse)
+source("Functions.R")
+
+# Load stellate cell data
+fname.sc <- "Data/datatable_sc.txt"
+data.import.sc <- read_tsv(fname.sc)
+
+# Strip out rows from data where locations are unknown (are NaN)
+data.sc <- data.import.sc %>% drop_na(dvloc)
+
+# Convert dvloc from microns to millimetres - prevents errors in model fitting large dv values
+data.sc <- mutate(data.sc, dvlocmm = dvloc/1000)
+
+# Add the number of observations for each mouse as a column
+counts <- count(data.sc, id)
+data.sc$counts <- counts$n[match(data.sc$id, counts$id)]
+
+# Make sure id, hemi, housing, mlpos, expr, patchdir are factors
+col_facs <- c("id", "hemi", "housing", "mlpos", "expr", "patchdir")
+data.sc[col_facs] <- lapply(data.sc[col_facs], factor)
+
+# Load data from WFs1+ve cells
+fname.wfs <- "Data/datatable_cal.txt"
+data.import.wfs <- read_tsv(fname.wfs)
+data.wfs <- data.import.wfs %>% drop_na(dvloc)
+data.wfs <- mutate(data.wfs, dvlocmm = dvloc/1000)
+
+# Convert SC data to nested tidy format. This is required for use of purrr::map, etc.
+data.sc_r <- data.sc %>%
+  dplyr::select(vm:fi, dvlocmm, id, housing, id, mlpos, hemi, age, housing, expr, patchdir, rectime, counts) %>%
+  gather("property", "value", vm:fi) %>%
+  group_by(property) %>%
+  nest %>%
+  ungroup
+
+```
+
+
 
 # Introduction
 
@@ -207,6 +227,13 @@ The concept of cell types provides a general organizing principle for understand
 ![](pastoll-et-al-2020.Rmd.media/fig1.jpg){fig.cap="(ref:figure1)"}
 
 (ref:figure1) Figure 1. **Classification and variability of neuronal cell types.** (**A**) Neuronal cell types are identifiable by features clustering around a distinct point (blue, green and yellow) or a line (orange) in feature space. The clustering implies that neuron types are defined by either a single set point (blue, green and yellow) or by multiple set points spread along a line (orange). (**B**) Phenotypic variability of a single neuron type could result from distinct set points that subdivide the neuron type but appear continuous when data from multiple animals are combined (modular), from differences in components of a set point that do not extend along a continuum but that in different animals cluster at different locations in feature space (orthogonal), or from differences between animals in the range covered by a continuum of set points (offset). These distinct forms of variability can only be made apparent by measuring the features of many neurons from multiple animals.
+
+```{r Figure 1}
+
+```
+
+
+
 
 ![](pastoll-et-al-2020.Rmd.media/fig1-figsupp1.jpg){fig.cap="(ref:figure1figuresupplement1)"}
 
