@@ -20,6 +20,29 @@ Insert code blocks into the R markdown document. Stencila will convert this docu
 
 ** Questions
 
+*** <2020-07-03 Fri>
+
+**** What is the format for referencing figures?
+
+In Bookdown a figure is referenced with \@ref(fig:label) where label is specified at the start of the code chunk for the figure. The way the Stencila generated .Rmd document references figures, e.g. [Figure 1](#fig1), appears different to Bookdown. It's not clear here what fig1 is referring to. Perhaps the file name for the image ('fig1.jpg’)? Also, when compiled to html with Knitr the links don’t work in the Stencila generated .Rmd document (this isn’t a major issue but might be a source of confusion).
+
+Nokome suggest to use the following at the start of a code chunk for a figure, {r fig.cap="(ref:figure3g)”}. It’s not clear here how this is referenced from the text part of the document, perhaps using (ref:figure 3g)? This appears to differ from the format used in the Stencila generated document.
+
+**** What to include in the document and how to organise it?
+
+- First, should the images from the original version of the manuscript remain in the document?
+
+I think Nokome might be suggesting to remove completely the original figures and instead generate figures by running code at start up. I think this would be very slow. It also has the drawbacks that not all figures could be generated from code, so they would have to be added back as images, and that it’s often helpful to see panels side by side. We could do this from code with packages like cowplot, but this often takes a lot of tweaking to look nice and it could be a lot of work for figures that were not originally made this way.
+
+- Second, where should the relevant code chunks be placed and referenced from?
+
+I think what Nokome is suggesting is to insert the code chunks within the legend immediately above the relevant panel label, so the legend for each figure would be broken up by code chunks. I worry this might be difficult to read.
+
+If the original figures remain, then the code chunks could instead be referenced from within the legend, either after the panel label, or at the end of the legend, e.g. using \@ref(fig:label). The code chunk(s) could then be inserted after the legend for the figure.
+
+
+
+
 *** <2020-06-30 Tue>
 
 ****  When I Knit pastoll-et-al.Rmd the references are given as ???.

@@ -236,7 +236,7 @@ The concept of cell types provides a general organizing principle for understand
 
 (ref:figure1) Figure 1. **Classification and variability of neuronal cell types.** (**A**) Neuronal cell types are identifiable by features clustering around a distinct point (blue, green and yellow) or a line (orange) in feature space. The clustering implies that neuron types are defined by either a single set point (blue, green and yellow) or by multiple set points spread along a line (orange). (**B**) Phenotypic variability of a single neuron type could result from distinct set points that subdivide the neuron type but appear continuous when data from multiple animals are combined (modular), from differences in components of a set point that do not extend along a continuum but that in different animals cluster at different locations in feature space (orthogonal), or from differences between animals in the range covered by a continuum of set points (offset). These distinct forms of variability can only be made apparent by measuring the features of many neurons from multiple animals.
 
-```{r Figure 1A}
+```{r Figure 1A, fig.cap="(ref:figure1A)"}
 # Make cell distributions for each 'cell type'
 numcells <- 100
 Cell_A <- tibble(x = rnorm(numcells, 10, 1),
