@@ -183,6 +183,7 @@ references: pastoll-et-al-2020.references.bib
 ```{r Setup}
 library(tidyverse)
 library(cowplot)
+library(lme4)
 source("Functions.R")
 
 # Use standard cowplot theme throughout
@@ -426,6 +427,184 @@ To what extent does variability between the integrative properties of SCs at a g
   scale_colour_manual(labels = c("", ""), values = c("red", "blue"))
 
 ```
+
+```{r Figure 4B, warning=FALSE}
+# Generate simulated data
+
+# Makes properties for each subject
+make_real_vals <-
+  function(n_subjects,
+           intersd_int = 1,
+           intersd_slope = 1) {
+    tb <-
+      tibble(
+        id = 1:n_subjects,
+        int = rnorm(n_subjects, 1, intersd_int),
+        slope = rnorm(n_subjects, 1, intersd_slope)
+      )
+  }
+
+# Make data for each subject
+make_data <-
+  function(subject_params,
+           loc_n = 20,
+           loc_max = 1,
+           intrasd = 1) {
+    total_points <- c(loc_n * count(subject_params))[[1]]
+    tb <- tibble(
+      id = rep(subject_params$id, loc_n),
+      loc = rep(runif(total_points, 0, loc_max)),
+      param = loc * subject_params$slope +
+        subject_params$int + rnorm(total_points, 0, intrasd)
+    )
+  }
+
+# Formats figures
+var_gp_format <- function(gg) {
+  gg <- gg +
+    ylim(0, 3) +
+    ylab("Feature") +
+    xlab("Location") +
+    theme(axis.text = element_blank())
+}
+
+# Generate data simulating dorsoventral organisation without inter-animal variability
+without_var_gp <- make_real_vals(20, 0, 0)
+without_var_gp_data <- make_data(without_var_gp, 20, 1, 0.5)
+
+# Plot fits to each animal separately
+without_var_gp_gg <-
+  ggplot(without_var_gp_data, aes(loc, param, group = id)) +
+  stat_smooth(geom = "line", method = lm, se = FALSE) +
+  ylim(0, 3)
+
+
+without_var_gp_gg <- var_gp_format(without_var_gp_gg) +
+  theme(axis.title = element_text(size = 9),
+        axis.title.x = element_text(vjust = 2)) +
+  labs(x = "") +
+  scale_x_continuous(
+    labels = function(breaks) {
+      rep_along(breaks, "")
+    }
+  )
+
+# Predictions for fitting with a mixed effect model
+without_var_gp_mm <-
+  lmer(param ~ loc + (loc ||
+                        id), data = without_var_gp_data, REML = FALSE)
+mm_without_predictplot <-
+  predict_plot_2(
+    without_var_gp_data,
+    without_var_gp_mm,
+    without_var_gp_data$loc,
+    without_var_gp_data$param
+  )
+
+mm_without_predictplot <- var_gp_format(mm_without_predictplot) +
+  annotate(
+    "text",
+    x = 0.6,
+    y = 0.6,
+    label = "paste(italic(R) ^ 2, \"marginal = .31\")",
+    parse = TRUE,
+    size = 2
+  ) +
+  annotate(
+    "text",
+    x = 0.6,
+    y = 0.2,
+    label = "paste(italic(R) ^ 2, \"conditional = .31\")",
+    parse = TRUE,
+    size = 2
+  )  +
+  theme(axis.title = element_text(size = 9),
+        axis.title.x = element_text(vjust = 2))
+
+
+mm_without_predictplot <- mm_without_predictplot +
+  labs(x = "", y = "")
+
+plot_grid(without_var_gp_gg, mm_without_predictplot)
+```
+
+
+```{r Figure 4C}
+with_var_gp <- make_real_vals(20, 0.2, 0.2)
+
+with_var_gp_data <- make_data(with_var_gp, 20, 1, 0.2)
+with_var_gp_gg <-ggplot(with_var_gp_data, aes(loc, param, group = id)) +
+  stat_smooth(geom = "line", method = lm, se = FALSE)
+
+(with_var_gp_gg <- var_gp_format(with_var_gp_gg) +
+    theme(axis.title = element_text(size = 9), axis.title.x = element_text(vjust = 2)))
+
+# Predictions for fitting with a mixed effect model
+with_var_gp_mm <- lmer(param ~ loc + (loc||id), data = with_var_gp_data, REML = FALSE)
+
+mm_with_predictplot <- mm_with_predictplot +
+  labs(y = "")
+
+ggdraw() +
+  draw_plot(with_var_gp_gg, x = pdx1, y = .23, width = pw, height = ph) +
+  draw_plot(mm_with_predictplot, x = pdx2, y = .23, width = pw, height = ph)
+
+```
+
+
+```{r Figure 4D}
+
+# Rheobase predictions from fits with a standard linear model
+
+
+rheo_predictplot_mod <- rheo_predictplot +
+    theme(axis.title = element_text(size = 9), axis.text = element_text(size = 7), axis.title.x = element_text(vjust = 2.5))
+
+
+# Rheobase predictions from mixed model fits
+
+
+
+
+mm_rheo_predictplot_mod <- mm_rheo_predictplot +
+    annotate("text", x = 1, y = 130, label = "paste(italic(R) ^ 2, \"marginal = .38\")", parse = TRUE, size = 2) +
+    annotate("text", x = 1, y = 50, label = "paste(italic(R) ^ 2, \"conditional = .65\")", parse = TRUE, size = 2) +
+    theme(axis.title = element_text(size = 9), axis.text = element_text(size = 7), axis.title.x = element_text(vjust = 2.5))
+
+mm_rheo_predictplot_mod <- mm_rheo_predictplot_mod +
+  labs(y = "")
+
+
+
+
+
+
+
+
+ew <- 0.35
+eh <- 0.3
+pw <- 0.18
+ph <- 0.24
+dh <- 0.24
+dw <- 0.18
+
+pdx1 <- 0.03
+pdx2 <- 0.22
+
+ggdraw() +
+  draw_plot(rheo_predictplot_mod, x = pdx1, y = 0, width = dw, height = dh) +
+  draw_plot(mm_rheo_predictplot_mod, x = pdx2, y = .0, width = dw, height = dh) +
+  draw_plot(with_var_gp_gg, x = pdx1, y = .23, width = pw, height = ph) +
+  draw_plot(without_var_gp_gg, x = pdx1, y = 0.43, width = pw, height = ph) +
+  draw_plot(mm_with_predictplot, x = pdx2, y = .23, width = pw, height = ph) +
+  draw_plot(mm_without_predictplot, x = pdx2, y = 0.43, width = pw, height = ph)  +
+  draw_plot_label(label = c("A", "B", "C", "D", "E"), size = 15,
+                  x = c(0, 0, 0, 0, 0.4), y = c(1, 0.73, 0.49, 0.28, 1)) +
+  draw_plot_label(label = c("Independent fits", "Mixed model fits"), size = 9,
+                  x = c(0.02, 0.22), y = c(0.72, 0.72)) +
+  draw_plot_label(label = c("Simulated without inter-animal variation", "Simulated with inter-animal variation", "Experimental"), x = c(0, 0.02, 0.1), y = c(0.68, 0.48, 0.26), size = 7)
+```
+
 
 
 ![](pastoll-et-al-2020.Rmd.media/fig4-figsupp1.jpg){fig.cap="(ref:figure4figuresupplement1)"}
