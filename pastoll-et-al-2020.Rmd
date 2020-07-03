@@ -180,7 +180,7 @@ fundedBy:
 references: pastoll-et-al-2020.references.bib
 ---
 
-```{r Setup}
+```{r Setup, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(cowplot)
 library(lme4)
@@ -230,6 +230,15 @@ data.wfs_r <- filter(data.wfs, classification == "Pyr") %>%
 
 ```
 
+```{r Model fitting}
+# This is required for Fiugre 4D, E and Table 1
+
+
+data.sc_r <- data.sc_r %>%
+  mutate(mm_vsris = map(data, model_vsris))%>%
+  mutate(mm_vsris_null = map(data, model_vsris_null))%>%
+  mutate(mm_vsris_lT = map(data, model_vsris_lT))
+```
 
 
 # Introduction
@@ -428,7 +437,7 @@ To what extent does variability between the integrative properties of SCs at a g
 
 ```
 
-```{r Figure 4B, warning=FALSE}
+```{r Figure 4B, warning=FALSE, message=FALSE}
 # Generate simulated data
 
 # Makes properties for each subject
@@ -529,7 +538,7 @@ plot_grid(without_var_gp_gg, mm_without_predictplot)
 ```
 
 
-```{r Figure 4C}
+```{r Figure 4C, message=FALSE}
 # Generate data simulating dorsoventral organisation with inter-animal variability
 with_var_gp <- make_real_vals(20, 0.2, 0.2)
 with_var_gp_data <- make_data(with_var_gp, 20, 1, 0.2)
@@ -581,7 +590,7 @@ plot_grid(with_var_gp_gg, mm_with_predictplot)
 ```
 
 
-```{r Figure 4D}
+```{r Figure 4D, warning=FALSE, message=FALSE}
 # The code below requires mixed effect models to have been fit to data in data.sc_r
 
 # Rheobase predictions from fits with a standard linear model
