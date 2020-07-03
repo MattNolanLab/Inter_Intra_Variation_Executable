@@ -530,25 +530,54 @@ plot_grid(without_var_gp_gg, mm_without_predictplot)
 
 
 ```{r Figure 4C}
+# Generate data simulating dorsoventral organisation with inter-animal variability
 with_var_gp <- make_real_vals(20, 0.2, 0.2)
-
 with_var_gp_data <- make_data(with_var_gp, 20, 1, 0.2)
-with_var_gp_gg <-ggplot(with_var_gp_data, aes(loc, param, group = id)) +
+
+# Plot fits to each animal separately
+with_var_gp_gg <-
+  ggplot(with_var_gp_data, aes(loc, param, group = id)) +
   stat_smooth(geom = "line", method = lm, se = FALSE)
 
-(with_var_gp_gg <- var_gp_format(with_var_gp_gg) +
-    theme(axis.title = element_text(size = 9), axis.title.x = element_text(vjust = 2)))
+with_var_gp_gg <- var_gp_format(with_var_gp_gg) +
+  theme(axis.title = element_text(size = 9),
+        axis.title.x = element_text(vjust = 2))
 
 # Predictions for fitting with a mixed effect model
-with_var_gp_mm <- lmer(param ~ loc + (loc||id), data = with_var_gp_data, REML = FALSE)
+with_var_gp_mm <-
+  lmer(param ~ loc + (loc ||
+                        id), data = with_var_gp_data, REML = FALSE)
+
+mm_with_predictplot <-
+  predict_plot_2(with_var_gp_data,
+                 with_var_gp_mm,
+                 with_var_gp_data$loc,
+                 with_var_gp_data$param)
+
+mm_with_predictplot <- var_gp_format(mm_with_predictplot) +
+  annotate(
+    "text",
+    x = 0.6,
+    y = 0.6,
+    label = "paste(italic(R) ^ 2, \"marginal = .49\")",
+    parse = TRUE,
+    size = 2
+  ) +
+  annotate(
+    "text",
+    x = 0.6,
+    y = 0.2,
+    label = "paste(italic(R) ^ 2, \"conditional = .73\")",
+    parse = TRUE,
+    size = 2
+  ) +
+  theme(axis.title = element_text(size = 9),
+        axis.title.x = element_text(vjust = 2))
 
 mm_with_predictplot <- mm_with_predictplot +
   labs(y = "")
 
-ggdraw() +
-  draw_plot(with_var_gp_gg, x = pdx1, y = .23, width = pw, height = ph) +
-  draw_plot(mm_with_predictplot, x = pdx2, y = .23, width = pw, height = ph)
-
+plot_grid(with_var_gp_gg, mm_with_predictplot)
 ```
 
 
