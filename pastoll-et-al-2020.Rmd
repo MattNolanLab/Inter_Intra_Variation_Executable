@@ -181,9 +181,12 @@ references: pastoll-et-al-2020.references.bib
 ---
 
 ```{r Setup}
-library(tidyverse,
-        cowplot)
+library(tidyverse)
+library(cowplot)
 source("Functions.R")
+
+# Use standard cowplot theme throughout
+theme_set(theme_cowplot())
 
 # Load stellate cell data
 fname.sc <- "Data/datatable_sc.txt"
@@ -409,6 +412,18 @@ To what extent does variability between the integrative properties of SCs at a g
 (ref:figure4) Figure 4. **Inter-animal variability and dependence on environment of intrinsic properties of stellate cells.** (**A**) Examples of rheobase as a function of dorsoventral position for two mice. (**B, C**) Each line is the fit of simulated data from a different subject for datasets in which there is no inter-subject variability (**B**) or in which intersubject variability is present (**C**). Fitting data from each subject independently with linear regression models suggests intersubject variation in both datasets (left). By contrast, after fitting mixed effect models (right) intersubject variation is no longer suggested for the dataset in which it is absent (**B**) but remains for the dataset in which it is present (**C**). (**D**) Each line is the fit of rheobase as a function of dorsoventral location for a single mouse. The fits were carried out independently for each mouse (left) or using a mixed effect model with mouse identity as a random effect (right). (**E**) The intercept (I), sum of the intercept and slope (I + S), and slopes realigned to a common intercept (right) for each mouse obtained by fitting mixed effect models for each property as a function of dorsoventral position.
 
 ```{r Figure 4A}
+(rheo_example <- ggplot(filter(data.sc, id == "mouse_20131106" | id == "mouse_20140113"), aes(dvloc, rheo)) +
+  geom_point(aes(colour = id), shape = 3) +
+  labs(x = "Location (µm)", y = "Rheobase (pA)", colour = "Mouse")) +
+  theme(axis.title = element_text(size = 7),
+          axis.text = element_text(size = 7),
+          axis.title.x = element_text(vjust = 2.5),
+          legend.text = element_text(size = 5),
+          legend.title=element_text(size=5),
+          legend.key.size = unit(0.2, "cm"),
+          legend.position = "right",
+          legend.key = element_rect(fill = "white", colour = "black")) +
+  scale_colour_manual(labels = c("", ""), values = c("red", "blue"))
 
 ```
 
