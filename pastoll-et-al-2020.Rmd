@@ -618,6 +618,31 @@ mm_rheo_predictplot_mod <- mm_rheo_predictplot_mod +
 plot_grid(rheo_predictplot_mod, mm_rheo_predictplot_mod)
 ```
 
+```{r Figure 4E, message=FALSE, warning=FALSE}
+combined_intercepts_slopes <- prep_int_slopes(data.sc_r, "property", "mm_vsris")
+
+id_housing <-  distinct(data.sc, id, housing, age, sex)
+combined_intercepts_slopes <- left_join(combined_intercepts_slopes, id_housing, by = "id")
+
+combined_intercepts_slopes$property_factors <- as.factor(combined_intercepts_slopes$property)
+
+combined_intercepts_slopes$property_factors = factor(combined_intercepts_slopes$property_factors, c("vm", "ir", "sag", "tau", "resf", "resmag", "rheo", "fi", "ahp", "spkmax", "spkthr", "spkhlf"))
+
+
+labels_intercepts <- c(ahp = "AHP min. (mV)", fi = "F-I (Hz / pA)", ir = "IR (MΩ)", resf = "Res F (Hz)", resmag = "Res. mag.", rheo = "Rheobase (pA)", sag = "Sag", spkhlf = "Spike h-w (ms)", spkmax = "Spike max. (mV)", spkthr = "Spike thres. (mV)", tau = "Tm (ms)", vm = "Vrest (mV)")
+
+(IS_figure <- ggplot(combined_intercepts_slopes, aes(x = measure, y = value_1, colour = housing)) +
+  geom_line(aes(group = id)) +
+  geom_jitter(aes(y = value_2), width = 0.2, alpha = 0.5) +
+  #geom_boxplot(aes(y = value_2), alpha = 0.1) +
+  stat_summary(aes(y = value_2), fun.y = "mean", fun.ymin = "mean", fun.ymax = "mean", size = 0.2, geom = "crossbar") +
+  scale_x_discrete(limits = c("ind_intercept", "ind_intercept_slope", "global_intercept", "global_intercept_slope"), label = c("I", "I + S", "", "")) +
+  facet_wrap(~property_factors, scales = "free",  labeller = labeller(property_factors = labels_intercepts)) +
+  theme_classic() +
+  hist_theme +
+  theme(axis.line.x = element_blank(), axis.ticks.x = element_blank(), legend.position = "bottom"))
+```
+
 
 
 ![](pastoll-et-al-2020.Rmd.media/fig4-figsupp1.jpg){fig.cap="(ref:figure4figuresupplement1)"}
