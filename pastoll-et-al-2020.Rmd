@@ -319,7 +319,7 @@ OOF_B <- tibble(x = runif(numcells, min = 25, max = 40) + rnorm(numcells,0,1),
      
 OrthogOffsetFeatures <- rbind(OOF_A, OOF_B)
 
-# Example offset data
+# Example 'offset' data
 numcells <- 60
 
 LOF_A <- tibble(x = runif(numcells, min = 25, max = 35) + rnorm(numcells,0,1),
@@ -548,7 +548,7 @@ plot_grid(without_var_gp_gg, mm_without_predictplot)
 ```
 
 
-```{r Figure 4C, message=FALSE}
+```{r Figure 4C, warning=FALSE, message=FALSE}
 # Generate data simulating dorsoventral organisation with inter-animal variability
 with_var_gp <- make_real_vals(20, 0.2, 0.2)
 with_var_gp_data <- make_data(with_var_gp, 20, 1, 0.2)
@@ -779,6 +779,11 @@ Estimation of conditional independence for measurements at the level of individu
 ![](pastoll-et-al-2020.Rmd.media/fig7.jpg){fig.cap="(ref:figure7)"}
 
 (ref:figure7) Figure 7. **Feature relationships and inter-animal variability after reducing dimensionality of the data.** (**A, B**) Partial correlations between the electrophysiological features investigated at the level of individual neurons (**A**) and at the level of animals (**B**). Partial correlations outside of the 95% basic bootstrap confidence intervals are color coded. Non-significant correlations are colored white. Properties shown are the resting membrane potential (Vm), input resistance (IR), membrane potential sag response (sag), membrane time constant (Tm), resonance frequency (Rm), resonance magnitude (Rm), rheobase (Rheo), slope of the current frequency relationship (FI), peak of the action potential after hyperpolarization (AHP), peak of the action potential (Smax) voltage threshold for the action potential (Sthr) and half-width of the action potential (SHW). (**C**) Proportion of variance explained by each principal component. To remove variance caused by animal age and the experimenter identity, the principal component analysis used a reduced dataset obtained by one experimenter and restricted to animals between 32 and 45 days old (N = 25, n = 572). (**D**) Loading plot for the first two principal components. (**E**) The first five principal components plotted as a function of position. (**F**) Intercept (I), intercept plus the slope (I + S) and slopes aligned to the same intercept, for fits for each animal of the first five principal components to a mixed model with location as a fixed effect and animal as a random effect.
+
+```{r Figure 7A}
+
+```
+
 
 Is inter-animal variation present in PCA dimensions that account for dorsoventral variation? The intercept, but not the slope of the dependence of the first two principal components on dorsoventral position depended on housing (adjusted p=0.039 and 0.027) ([Figure 7E,F](#fig7) and [Supplementary file 15](#supp15)). After accounting for housing, the first two principal components were still better fit by models that include animal identity as a random effect (adjusted p=3.3×10^−9^ and 4.1 × 10^−86^), indicating remaining inter-animal differences in these components ([Supplementary file 16](#supp16)). A further nine of the next ten higher-order principal components did not depend on housing (adjusted p>0.1) ([Supplementary file 15](#supp15)), while eight differed significantly between animals (adjusted p&lt;0.05) ([Supplementary file 16](#supp16)).
 
