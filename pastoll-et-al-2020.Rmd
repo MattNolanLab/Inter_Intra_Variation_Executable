@@ -184,6 +184,7 @@ references: pastoll-et-al-2020.references.bib
 library(tidyverse)
 library(cowplot)
 library(lme4)
+library(GGally)
 source("Functions.R")
 
 # Use standard cowplot theme throughout
@@ -231,7 +232,7 @@ data.wfs_r <- filter(data.wfs, classification == "Pyr") %>%
 ```
 
 ```{r Fit mixed effect models}
-# This is required for Figure 4D, E and Table 1.
+# This is required for Figure 4D, E, 7B and Table 1.
 # Code is here as it only needs to be run once.
 
 # Model for uncorrelated random intercept and slope
@@ -781,8 +782,89 @@ Estimation of conditional independence for measurements at the level of individu
 (ref:figure7) Figure 7. **Feature relationships and inter-animal variability after reducing dimensionality of the data.** (**A, B**) Partial correlations between the electrophysiological features investigated at the level of individual neurons (**A**) and at the level of animals (**B**). Partial correlations outside of the 95% basic bootstrap confidence intervals are color coded. Non-significant correlations are colored white. Properties shown are the resting membrane potential (Vm), input resistance (IR), membrane potential sag response (sag), membrane time constant (Tm), resonance frequency (Rm), resonance magnitude (Rm), rheobase (Rheo), slope of the current frequency relationship (FI), peak of the action potential after hyperpolarization (AHP), peak of the action potential (Smax) voltage threshold for the action potential (Sthr) and half-width of the action potential (SHW). (**C**) Proportion of variance explained by each principal component. To remove variance caused by animal age and the experimenter identity, the principal component analysis used a reduced dataset obtained by one experimenter and restricted to animals between 32 and 45 days old (N = 25, n = 572). (**D**) Loading plot for the first two principal components. (**E**) The first five principal components plotted as a function of position. (**F**) Intercept (I), intercept plus the slope (I + S) and slopes aligned to the same intercept, for fits for each animal of the first five principal components to a mixed model with location as a fixed effect and animal as a random effect.
 
 ```{r Figure 7A}
+data.sc_neurons <- data.sc %>% dplyr::select(vm:fi) %>%
+  na.omit
+Q_neurons <- calcQ(data.sc_neurons)
+
+Q_neurons <- as.matrix(Q_neurons)
+colnames(Q_neurons) <- colnames(data.sc_neurons)
+rownames(Q_neurons) <- colnames(data.sc_neurons)
+
+order_names <-
+  c(
+    "vm",
+    "ir",
+    "sag",
+    "tau",
+    "resf",
+    "resmag",
+    "rheo",
+    "fi",
+    "ahp",
+    "spkmax",
+    "spkthr",
+    "spkhlf"
+  )
+
+Q_neurons <-
+  Q_neurons[match(order_names, rownames(Q_neurons)), match(order_names, colnames(Q_neurons))]
+
+new_names <-
+  c("Vm",
+    "IR",
+    "Sag",
+    "Tm",
+    "ResF",
+    "ResM",
+    "Rheo",
+    "F-I",
+    "AHP",
+    "Smax",
+    "Sthr",
+    "SHW")
+
+colnames(Q_neurons) <- new_names
+rownames(Q_neurons) <- new_names
+
+(
+  Q_neurons_plot <-
+    ggcorr(
+      data = NULL,
+      cor_matrix = Q_neurons,
+      geom = "circle",
+      min_size = 0,
+      max_size = 5,
+      legend.size = 7,
+      size = 2
+    )
+)
+```
+
+```{r Figure 7B}
+data_summary.mm_vsris <- prep_int_slopes_PCA(data.sc_r, "property", "mm_vsris")
+
+data_intercepts <-  spread(data_summary.mm_vsris[,1:3], property, ind_intercept)
+data_slopes <-  spread(data_summary.mm_vsris[,c(1:2, 4)], property, ind_slope)
+
+
+data.sc_fits <- data_intercepts %>% dplyr::select(ahp:vm) %>%
+  na.omit
+
+Q_intercepts <- calcQ(data.sc_fits)
+
+Q_intercepts <- as.matrix(Q_intercepts)
+colnames(Q_intercepts) <- colnames(data.sc_fits)
+rownames(Q_intercepts) <- colnames(data.sc_fits)
+
+Q_intercepts <- Q_intercepts[match(order_names, rownames(Q_intercepts)), match(order_names, colnames(Q_intercepts))]
+
+colnames(Q_intercepts) <- new_names
+rownames(Q_intercepts) <- new_names
+
+(Q_intercepts_plot <- ggcorr(data = NULL, cor_matrix = Q_intercepts, geom = "circle", min_size = 0, max_size = 5, legend.size = 7, size = 2))
 
 ```
+
 
 
 Is inter-animal variation present in PCA dimensions that account for dorsoventral variation? The intercept, but not the slope of the dependence of the first two principal components on dorsoventral position depended on housing (adjusted p=0.039 and 0.027) ([Figure 7E,F](#fig7) and [Supplementary file 15](#supp15)). After accounting for housing, the first two principal components were still better fit by models that include animal identity as a random effect (adjusted p=3.3×10^−9^ and 4.1 × 10^−86^), indicating remaining inter-animal differences in these components ([Supplementary file 16](#supp16)). A further nine of the next ten higher-order principal components did not depend on housing (adjusted p>0.1) ([Supplementary file 15](#supp15)), while eight differed significantly between animals (adjusted p&lt;0.05) ([Supplementary file 16](#supp16)).
