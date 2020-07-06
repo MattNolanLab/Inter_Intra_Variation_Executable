@@ -233,10 +233,21 @@ data.wfs_r <- filter(data.wfs, classification == "Pyr") %>%
 ```{r Fit mixed effect models}
 # This is required for Figure 4D, E and Table 1.
 # Code is here as it only needs to be run once.
+
+# Model for uncorrelated random intercept and slope
+model_vsris <- function(df) {
+  lme4::lmer(value ~ dvlocmm +(dvlocmm||id), data = df, REML = FALSE, na.action = na.exclude)
+}
+
+# Null model for uncorrelated random intercept and slope
+model_vsris_null <- function(df) {
+  lme4::lmer(value ~ dvlocmm||id, data = df, REML = FALSE, na.action = na.exclude)
+}
+
+# Fit models to the data
 data.sc_r <- data.sc_r %>%
   mutate(mm_vsris = map(data, model_vsris))%>%
-  mutate(mm_vsris_null = map(data, model_vsris_null))%>%
-  mutate(mm_vsris_lT = map(data, model_vsris_lT))
+  mutate(mm_vsris_null = map(data, model_vsris_null))
 ```
 
 

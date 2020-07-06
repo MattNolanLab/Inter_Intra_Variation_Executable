@@ -30,44 +30,7 @@ model_to_fit <- function(df) {
 #'  
 #' 
 ## ----------------------------------------------------------------------
-# Model for uncorrelated random intercept and slope
-model_vsris <- function(df) {
-  lme4::lmer(value ~ dvlocmm +(dvlocmm||id), data = df, REML = FALSE, na.action = na.exclude)
-}
-
-model_vsris_1 <- function(df) {
-  lme4::lmer(value ~ dvlocmm1 +(dvlocmm1||id), data = df, REML = FALSE, na.action = na.exclude)
-}
-
-model_vsris_lT<- function(df) {
-  lmerTest::lmer(value ~ dvlocmm +(dvlocmm||id), data = df, REML = FALSE, na.action = na.exclude)
-}
-
-# Null model for uncorrelated random intercept and slope
-model_vsris_null <- function(df) {
-  lme4::lmer(value ~ dvlocmm||id, data = df, REML = FALSE, na.action = na.exclude)
-}
-
-model_vsris_1_null <- function(df) {
-  lme4::lmer(value ~ dvlocmm1||id, data = df, REML = FALSE, na.action = na.exclude)
-}
-
-# Model vs random intercept.
-model_vsri <- function(df) {
-    lme4::lmer(value ~ dvlocmm +(1|id), data = df, REML = FALSE, na.action = na.exclude)
-}
-# Null model vs random intercept.
-model_vsri_null <- function(df) {
-    lme4::lmer(value ~ 1|id, data = df, REML = FALSE, na.action = na.exclude)
-}
-# Model vs correlated random intercept and slope.
-model_vscris <- function(df) {
-  lme4::lmer(value ~ dvlocmm +(dvlocmm|id), data = df, REML = FALSE, na.action = na.exclude)
-}
-# Null model vs correlated random intercept and slope.
-model_vscris_null <- function(df) {
-  lme4::lmer(value ~ dvlocmm|id, data = df, REML = FALSE, na.action = na.exclude)
-}
+# Additional models
 
 # Model for uncorrelated random intercept and slope including housing as a fixed effect
 model_vsris_housing <- function(df) {
