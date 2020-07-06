@@ -865,6 +865,35 @@ rownames(Q_intercepts) <- new_names
 
 ```
 
+```{r Fiugre 7C}
+data.pca <- dplyr::select(data.sc, vm:fi, dvlocmm, id, housing, id, mlpos, hemi, sex, age, housing, expr, patchdir, rectime) %>%
+  filter(age > 32 & age <45 & expr == "HP")
+
+all.pca <- prcomp(drop_na(data.pca[1:12], fi),
+                  retx = TRUE,
+                  scale = TRUE)
+
+prop.var.df <- as.data.frame(summary(all.pca)$importance[2,])
+colnames(prop.var.df) <- c("PropVar")
+prop.var.df$components <- 1:12
+(all.pca.prop.var.plot <- ggplot(prop.var.df, aes(components, PropVar)) +
+  geom_bar(stat = "identity") +
+  scale_x_discrete("Component") +
+  ylab("Proportion of variance") +
+    theme(title = element_text(size = 9), axis.text = element_text(size = 9)))
+```
+```{r Figure 7D}
+# Requires Figure 7C to have been generated.
+(all.pca.biplot <- pca_biplot(as.data.frame(all.pca$rotation), fontsize = 2, order_names = order_names, new_names = c("Vm", "IR", "Sag", "Tm", "Res. F", "Res. Mag.", "Rheo", "FI", "AHPmax", "Spk. max", "Spk. thr", "Spk. HW")) +
+    theme(text = element_text(size = 9)) +
+    xlim(-0.5, 0.55))
+```
+
+```{r Figure 7E}
+
+```
+
+
 
 
 Is inter-animal variation present in PCA dimensions that account for dorsoventral variation? The intercept, but not the slope of the dependence of the first two principal components on dorsoventral position depended on housing (adjusted p=0.039 and 0.027) ([Figure 7E,F](#fig7) and [Supplementary file 15](#supp15)). After accounting for housing, the first two principal components were still better fit by models that include animal identity as a random effect (adjusted p=3.3×10^−9^ and 4.1 × 10^−86^), indicating remaining inter-animal differences in these components ([Supplementary file 16](#supp16)). A further nine of the next ten higher-order principal components did not depend on housing (adjusted p>0.1) ([Supplementary file 15](#supp15)), while eight differed significantly between animals (adjusted p&lt;0.05) ([Supplementary file 16](#supp16)).
