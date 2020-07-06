@@ -185,6 +185,7 @@ library(tidyverse)
 library(cowplot)
 library(lme4)
 library(GGally)
+library(MuMIn)
 source("Functions.R")
 
 # Use standard cowplot theme throughout
@@ -781,7 +782,7 @@ Estimation of conditional independence for measurements at the level of individu
 
 (ref:figure7) Figure 7. **Feature relationships and inter-animal variability after reducing dimensionality of the data.** (**A, B**) Partial correlations between the electrophysiological features investigated at the level of individual neurons (**A**) and at the level of animals (**B**). Partial correlations outside of the 95% basic bootstrap confidence intervals are color coded. Non-significant correlations are colored white. Properties shown are the resting membrane potential (Vm), input resistance (IR), membrane potential sag response (sag), membrane time constant (Tm), resonance frequency (Rm), resonance magnitude (Rm), rheobase (Rheo), slope of the current frequency relationship (FI), peak of the action potential after hyperpolarization (AHP), peak of the action potential (Smax) voltage threshold for the action potential (Sthr) and half-width of the action potential (SHW). (**C**) Proportion of variance explained by each principal component. To remove variance caused by animal age and the experimenter identity, the principal component analysis used a reduced dataset obtained by one experimenter and restricted to animals between 32 and 45 days old (N = 25, n = 572). (**D**) Loading plot for the first two principal components. (**E**) The first five principal components plotted as a function of position. (**F**) Intercept (I), intercept plus the slope (I + S) and slopes aligned to the same intercept, for fits for each animal of the first five principal components to a mixed model with location as a fixed effect and animal as a random effect.
 
-```{r Figure 7A}
+```{r Figure 7A, warning=FALSE}
 data.sc_neurons <- data.sc %>% dplyr::select(vm:fi) %>%
   na.omit
 Q_neurons <- calcQ(data.sc_neurons)
@@ -840,7 +841,7 @@ rownames(Q_neurons) <- new_names
 )
 ```
 
-```{r Figure 7B}
+```{r Figure 7B, warning=FALSE}
 data_summary.mm_vsris <- prep_int_slopes_PCA(data.sc_r, "property", "mm_vsris")
 
 data_intercepts <-  spread(data_summary.mm_vsris[,1:3], property, ind_intercept)
@@ -890,9 +891,102 @@ prop.var.df$components <- 1:12
 ```
 
 ```{r Figure 7E}
+all.pca.x <- bind_cols(as_tibble(all.pca$x), drop_na(data.pca, fi))
 
+out.pca.x_g1_5 <- all.pca.x %>%
+  gather("component", "value", 1:5)
+(
+  pc1to5_plot <-
+    ggplot(data = out.pca.x_g1_5, aes(
+      x = dvlocmm, y = value, colour = housing
+    )) +
+    geom_point(alpha = 0.5) +
+    facet_wrap(~ component, ncol = 5) +
+    scale_x_continuous("DV location (mm)", c(0, 1, 2)) +
+    theme_classic() +
+    PCA_theme +
+    theme(legend.position = "bottom")
+)
 ```
 
+```{r Figure 7F, warning=FALSE}
+# Reform data for use with dplyr.
+out.pca.x_g <- all.pca.x %>%
+  gather("component", "value", 1:12) %>%
+  group_by(component) %>%
+  nest() %>%
+  ungroup()
+
+# Fit models
+out.pca.x_g <- out.pca.x_g %>%
+  mutate(mixedmodel_vsris = map(data, model_vsris)) %>%
+  mutate(mixedmodel_vsris_null = map(data, model_vsris_null))
+
+# Extract summary data from the fit
+out.pca.x_g <- out.pca.x_g %>%
+  mutate(vsris_glance = map(mixedmodel_vsris, broom::glance)) %>%
+  mutate(vsris_null_glance = map(mixedmodel_vsris_null, broom::glance))
+
+# Preparation for making the figure
+combined_intercepts_slopes_PCA <-
+  prep_int_slopes(out.pca.x_g, "component", "mixedmodel_vsris")
+
+id_housing_PCA <-  distinct(all.pca.x, id, housing)
+
+combined_intercepts_slopes_PCA <-
+  left_join(combined_intercepts_slopes_PCA, id_housing_PCA, by = "id")
+
+combined_intercepts_slopes_PCA$component_factors <-
+  as.factor(combined_intercepts_slopes_PCA$component)
+
+combined_intercepts_slopes_PCA$component_factors = factor(
+  combined_intercepts_slopes_PCA$component_factors,
+  c(
+    "PC1",
+    "PC2",
+    "PC3",
+    "PC4",
+    "PC5",
+    "PC6",
+    "PC7",
+    "PC8",
+    "PC9",
+    "PC10",
+    "PC11"
+  )
+)
+
+# Plot the figure
+(IS_figure_PCA_1_5 <-
+  ggplot(
+    subset(
+      combined_intercepts_slopes_PCA,
+      component %in% c("PC1", "PC2", "PC3", "PC4", "PC5")
+    ),
+    aes(x = measure, y = value_1, colour = housing)
+  ) +
+  geom_line(aes(group = id)) +
+  geom_jitter(aes(y = value_2), width = 0.2) +
+  scale_x_discrete(
+    limits = c(
+      "ind_intercept",
+      "ind_intercept_slope",
+      "global_intercept",
+      "global_intercept_slope"
+    ),
+    label = c("I", "I + S", "", "")
+  ) +
+  facet_wrap( ~ component_factors, ncol = 5) +
+  theme_classic() +
+  hist_theme +
+  theme(
+    axis.line.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.text.x = element_text(angle = 90)
+  ) +
+  theme(legend.position = "none"))
+
+```
 
 
 
