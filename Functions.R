@@ -299,7 +299,7 @@ prep_int_slopes <- function(df, group_col, mm_col){
 
 # Use broom::tidy to extract model fit parameters for each feature.
 df <- df %>%
-  mutate(mm_tidy = map(!! rlang::sym(mm_col), broom::tidy)) %>%
+  mutate(mm_tidy = map(!! rlang::sym(mm_col), broomExtra::tidy)) %>%
   mutate(pop_intercepts = map_dbl(mm_tidy, ~.$estimate[[1]]))
 
 # Obtain individual intercepts and slopes for each feature as separate columns.
@@ -339,7 +339,7 @@ prep_int_slopes_PCA <- function(df, group_col, mm_col){
 
 # Use broom::tidy to extract model fit parameters for each feature.
 df <- df %>%
-  mutate(mm_tidy = map(!! rlang::sym(mm_col), broom::tidy)) %>%
+  mutate(mm_tidy = map(!! rlang::sym(mm_col), broomExtra::tidy)) %>%
   mutate(pop_intercepts = map_dbl(mm_tidy, ~.$estimate[[1]]))
 
 # Obtain individual intercepts and slopes for each feature as separate columns.

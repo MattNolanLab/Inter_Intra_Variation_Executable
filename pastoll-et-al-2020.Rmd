@@ -181,6 +181,7 @@ references: pastoll-et-al-2020.references.bib
 ---
 
 ```{r Setup, warning=FALSE, message=FALSE}
+# The package broomExtra must also be installed.
 library(tidyverse)
 library(cowplot)
 library(lme4)
