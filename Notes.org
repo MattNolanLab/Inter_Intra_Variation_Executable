@@ -13,10 +13,23 @@ Insert code blocks into the R markdown document. Stencila will convert this docu
 
 *** Set up a GitHub repository to contain the converted documents as well as project data and functions.
 
+*** Make sure the 'bookdown' package is installed in R.
+This enable documents generated with Knit to have functioning links to figures / code chunks.
+Re-start R Studio after installing the bookdown package.
+
 *** Insert code blocks
 - Set up code block at the top of the document. This calls libraries and loads data.
 - Code blocks near to figures.
 
+*** Bookdown note
+To stop the server run 'servr::daemon_stop(1)'
+
+*** To link from text to code for figures
+add '\@ref(fig:label)' where label is the chunk label. This will generate a link when the project is compiled with bookdown (although it will not with Knit). The chunk header also needs to include a figure caption for the link to be generated correctly by bookdown. In bookdown the link is to the figure rather than the code chunk. 
+
+Bookdown appears unable to references code chunks (see here: https://github.com/rstudio/bookdown/issues/238).
+
+For links to work it seems the label an only be text (e.g. no spaces, symbols, etc).
 
 ** Questions
 

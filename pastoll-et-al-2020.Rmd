@@ -177,11 +177,11 @@ fundedBy:
   - name: Wellcome
     type: Organization
   type: MonetaryGrant
-references: pastoll-et-al-2020.references.bib
+bibliography: pastoll-et-al-2020.references.bib
 ---
 
 ```{r Setup, warning=FALSE, message=FALSE}
-# The package broomExtra must also be installed.
+# The packages broomExtra, corpcor must also be installed.
 library(tidyverse)
 library(cowplot)
 library(lme4)
@@ -262,7 +262,10 @@ The concept of cell types provides a general organizing principle for understand
 
 (ref:figure1) Figure 1. **Classification and variability of neuronal cell types.** (**A**) Neuronal cell types are identifiable by features clustering around a distinct point (blue, green and yellow) or a line (orange) in feature space. The clustering implies that neuron types are defined by either a single set point (blue, green and yellow) or by multiple set points spread along a line (orange). (**B**) Phenotypic variability of a single neuron type could result from distinct set points that subdivide the neuron type but appear continuous when data from multiple animals are combined (modular), from differences in components of a set point that do not extend along a continuum but that in different animals cluster at different locations in feature space (orthogonal), or from differences between animals in the range covered by a continuum of set points (offset). These distinct forms of variability can only be made apparent by measuring the features of many neurons from multiple animals.
 
-```{r Figure 1A, fig.cap="(ref:figure1A)"}
+Executable version of Figure 1A: \@ref(fig:Figure1A)
+Executable version of Figure 1B: \@ref(fig:Figure1B)
+
+```{r Figure1A, fig.cap="A"}
 # Make cell distributions for each 'cell type'
 numcells <- 100
 Cell_A <- tibble(x = rnorm(numcells, 10, 1),
@@ -298,7 +301,7 @@ CF_plot
 
 ```
 
-```{r Figure 1B, warning=FALSE}
+```{r Figure1B, warning=FALSE, fig.cap="B"}
 # Example 'modular' data
 numcells <- 20
 MF_A <- tibble(x = c(rnorm(numcells, 26, 0.5), rnorm(numcells, 31, 0.5), rnorm(numcells, 36, 0.5)),
@@ -407,7 +410,9 @@ Because SCs are found intermingled with pyramidal cells in layer 2 (L2PCs), and 
 
 (ref:figure3) Figure 3. **Distinct and dorsoventrally organized properties of layer 2 stellate cells.** (**A**) Representative action potential after hyperpolarization waveforms from a SC (left), a pyramidal cell (middle) and an unidentified cell (right). The pyramidal and unidentified cells were both positively labelled in _Wfs1^C^_^re^ mice. (**B**) Plot of the first versus the second principal component from PCA of the properties of labelled neurons in _Wfs1_^Cre^ mice reveals two populations of neurons. (**C**) Histogram showing the distribution of rheobase values of cells positively labelled in _Wfs1_^Cre^ mice. The two groups identified in panel (B) can be distinguished by their rheobase. (**D**) Plot of the first two principal components from PCA of the properties of the L2PC (n = 44, green) and SC populations (n = 836, black). Putative pyramidal cells (x) and SCs (+) are colored according to their dorsoventral location (inset shows the scale). (**E**) Proportion of total variance explained by the first five principal components for the analysis in panel (**D**). (**F**) Histograms of the locations of recorded SCs (upper) and L2PCs (lower). (**G**) All values of measured features from all mice are plotted as a function of the dorsoventral location of the recorded cells. Lines indicate fits of a linear model to the complete datasets for SCs (black) and L2PCs (green). Putative pyramidal cells (x, green) and SCs (+, black). Adjusted R^2^ values use the same color scheme.
 
-```{r Figure 3B, warning=FALSE}
+Executable version of Figure 3B: \@ref(fig:Figure3B)
+
+```{r Figure3B, warning=FALSE, fig.cap="B"}
 plot_sc_wfs <- data.sc %>%
   select(vm:fi, dvlocmm) %>%
   mutate(classification = "SC")
@@ -434,7 +439,13 @@ To what extent does variability between the integrative properties of SCs at a g
 
 (ref:figure4) Figure 4. **Inter-animal variability and dependence on environment of intrinsic properties of stellate cells.** (**A**) Examples of rheobase as a function of dorsoventral position for two mice. (**B, C**) Each line is the fit of simulated data from a different subject for datasets in which there is no inter-subject variability (**B**) or in which intersubject variability is present (**C**). Fitting data from each subject independently with linear regression models suggests intersubject variation in both datasets (left). By contrast, after fitting mixed effect models (right) intersubject variation is no longer suggested for the dataset in which it is absent (**B**) but remains for the dataset in which it is present (**C**). (**D**) Each line is the fit of rheobase as a function of dorsoventral location for a single mouse. The fits were carried out independently for each mouse (left) or using a mixed effect model with mouse identity as a random effect (right). (**E**) The intercept (I), sum of the intercept and slope (I + S), and slopes realigned to a common intercept (right) for each mouse obtained by fitting mixed effect models for each property as a function of dorsoventral position.
 
-```{r Figure 4A}
+Executable version of Figure 4A: \@ref(fig:Figure4A)
+Executable version of Figure 4B: \@ref(fig:Figure4B)
+Executable version of Figure 4C: \@ref(fig:Figure4C)
+Executable version of Figure 4D: \@ref(fig:Figure4D)
+Executable version of Figure 4E: \@ref(fig:Figure4E)
+
+```{r Figure4A, fig.cap="A"}
 (rheo_example <- ggplot(filter(data.sc, id == "mouse_20131106" | id == "mouse_20140113"), aes(dvloc, rheo)) +
   geom_point(aes(colour = id), shape = 3) +
   labs(x = "Location (µm)", y = "Rheobase (pA)", colour = "Mouse")) +
@@ -450,7 +461,7 @@ To what extent does variability between the integrative properties of SCs at a g
 
 ```
 
-```{r Figure 4B, warning=FALSE, message=FALSE}
+```{r Figure4B, warning=FALSE, message=FALSE, fig.cap="B"}
 # Generate simulated data
 
 # Makes properties for each subject
@@ -551,7 +562,7 @@ plot_grid(without_var_gp_gg, mm_without_predictplot)
 ```
 
 
-```{r Figure 4C, warning=FALSE, message=FALSE}
+```{r Figure4C, warning=FALSE, message=FALSE, fig.cap="C"}
 # Generate data simulating dorsoventral organisation with inter-animal variability
 with_var_gp <- make_real_vals(20, 0.2, 0.2)
 with_var_gp_data <- make_data(with_var_gp, 20, 1, 0.2)
@@ -603,7 +614,7 @@ plot_grid(with_var_gp_gg, mm_with_predictplot)
 ```
 
 
-```{r Figure 4D, warning=FALSE, message=FALSE}
+```{r Figure4D, warning=FALSE, message=FALSE, fig.cap="D"}
 # The code below requires mixed effect models to have been fit to data in data.sc_r
 
 # Rheobase predictions from fits with a standard linear model
@@ -631,7 +642,7 @@ mm_rheo_predictplot_mod <- mm_rheo_predictplot_mod +
 plot_grid(rheo_predictplot_mod, mm_rheo_predictplot_mod)
 ```
 
-```{r Figure 4E, message=FALSE, warning=FALSE}
+```{r Figure4E, message=FALSE, warning=FALSE, fig.cap="E"}
 combined_intercepts_slopes <-
   prep_int_slopes(data.sc_r, "property", "mm_vsris")
 
@@ -783,7 +794,14 @@ Estimation of conditional independence for measurements at the level of individu
 
 (ref:figure7) Figure 7. **Feature relationships and inter-animal variability after reducing dimensionality of the data.** (**A, B**) Partial correlations between the electrophysiological features investigated at the level of individual neurons (**A**) and at the level of animals (**B**). Partial correlations outside of the 95% basic bootstrap confidence intervals are color coded. Non-significant correlations are colored white. Properties shown are the resting membrane potential (Vm), input resistance (IR), membrane potential sag response (sag), membrane time constant (Tm), resonance frequency (Rm), resonance magnitude (Rm), rheobase (Rheo), slope of the current frequency relationship (FI), peak of the action potential after hyperpolarization (AHP), peak of the action potential (Smax) voltage threshold for the action potential (Sthr) and half-width of the action potential (SHW). (**C**) Proportion of variance explained by each principal component. To remove variance caused by animal age and the experimenter identity, the principal component analysis used a reduced dataset obtained by one experimenter and restricted to animals between 32 and 45 days old (N = 25, n = 572). (**D**) Loading plot for the first two principal components. (**E**) The first five principal components plotted as a function of position. (**F**) Intercept (I), intercept plus the slope (I + S) and slopes aligned to the same intercept, for fits for each animal of the first five principal components to a mixed model with location as a fixed effect and animal as a random effect.
 
-```{r Figure 7A, warning=FALSE}
+Executable version of Figure 7A: \@ref(fig:Figure7A)
+Executable version of Figure 7B: \@ref(fig:Figure7B)
+Executable version of Figure 7C: \@ref(fig:Figure7C)
+Executable version of Figure 7D: \@ref(fig:Figure7D)
+Executable version of Figure 7E: \@ref(fig:Figure7E)
+Executable version of Figure 7F: \@ref(fig:Figure7F)
+
+```{r Figure7A, warning=FALSE, fig.cap="A"}
 data.sc_neurons <- data.sc %>% dplyr::select(vm:fi) %>%
   na.omit
 Q_neurons <- calcQ(data.sc_neurons)
@@ -842,7 +860,7 @@ rownames(Q_neurons) <- new_names
 )
 ```
 
-```{r Figure 7B, warning=FALSE}
+```{r Figure7B, warning=FALSE, fig.cap="B"}
 data_summary.mm_vsris <- prep_int_slopes_PCA(data.sc_r, "property", "mm_vsris")
 
 data_intercepts <-  spread(data_summary.mm_vsris[,1:3], property, ind_intercept)
@@ -867,7 +885,7 @@ rownames(Q_intercepts) <- new_names
 
 ```
 
-```{r Fiugre 7C}
+```{r Fiugre7C, fig.cap="C"}
 data.pca <- dplyr::select(data.sc, vm:fi, dvlocmm, id, housing, id, mlpos, hemi, sex, age, housing, expr, patchdir, rectime) %>%
   filter(age > 32 & age <45 & expr == "HP")
 
@@ -884,14 +902,15 @@ prop.var.df$components <- 1:12
   ylab("Proportion of variance") +
     theme(title = element_text(size = 9), axis.text = element_text(size = 9)))
 ```
-```{r Figure 7D}
+
+```{r Figure7D, fig.cap="D"}
 # Requires Figure 7C to have been generated.
 (all.pca.biplot <- pca_biplot(as.data.frame(all.pca$rotation), fontsize = 2, order_names = order_names, new_names = c("Vm", "IR", "Sag", "Tm", "Res. F", "Res. Mag.", "Rheo", "FI", "AHPmax", "Spk. max", "Spk. thr", "Spk. HW")) +
     theme(text = element_text(size = 9)) +
     xlim(-0.5, 0.55))
 ```
 
-```{r Figure 7E}
+```{r Figure7E, fig.cap="E"}
 all.pca.x <- bind_cols(as_tibble(all.pca$x), drop_na(data.pca, fi))
 
 out.pca.x_g1_5 <- all.pca.x %>%
@@ -910,7 +929,7 @@ out.pca.x_g1_5 <- all.pca.x %>%
 )
 ```
 
-```{r Figure 7F, warning=FALSE}
+```{r Figure7F, warning=FALSE, fig.cap="F"}
 # Reform data for use with dplyr.
 out.pca.x_g <- all.pca.x %>%
   gather("component", "value", 1:12) %>%
