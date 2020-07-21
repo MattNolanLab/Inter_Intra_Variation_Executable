@@ -13,9 +13,57 @@ Insert code blocks into the R markdown document. Stencila will convert this docu
 
 *** Set up a GitHub repository to contain the converted documents as well as project data and functions.
 
+*** Make sure the 'bookdown' package is installed in R.
+This enable documents generated with Knit to have functioning links to figures / code chunks.
+Re-start R Studio after installing the bookdown package.
+
 *** Insert code blocks
 - Set up code block at the top of the document. This calls libraries and loads data.
 - Code blocks near to figures.
+
+*** Bookdown note
+To stop the server run 'servr::daemon_stop(1)'
+
+*** To link from text to code for figures
+add '\@ref(fig:label)' where label is the chunk label. This will generate a link when the project is compiled with bookdown (although it will not with Knit). The chunk header also needs to include a figure caption for the link to be generated correctly by bookdown. In bookdown the link is to the figure rather than the code chunk. 
+
+Bookdown appears unable to references code chunks (see here: https://github.com/rstudio/bookdown/issues/238).
+
+For links to work it seems the label an only be text (e.g. no spaces, symbols, etc).
+
+*** Download the Stencila app
+
+See instructions here: https://github.com/stencila/stencila#linux
+
+Run:
+
+curl -L https://raw.githubusercontent.com/stencila/stencila/master/install.sh | bash
+
+Gives the following output:
+
+Installing stencila to /home/matt/.local/bin/stencila-v0.34.0
+🚨 ERROR encoda:puppeteer Chromium does not exist in expected location: /home/matt/.local/bin/stencila-v0.34.0/node_modules/puppeteer/.local-chromium/linux-768783/chrome-linux/chrome
+🛈 INFO  stencila Setup complete.
+Pointing stencila to /home/matt/.local/bin/stencila-v0.34.0/stencila 
+
+Add stencila to the path using:
+
+export PATH=$PATH:/home/matt/.local/bin/stencila-v0.34.0/stencila
+
+Still reports command not found.
+
+*** Run the Stencila app
+
+Run with:
+
+stencila convert pastoll-et-al-2020.Rmd article.html --theme elife
+
+Generates a folder containing images but no html file. Output is:
+
+🚨 ERROR encoda:puppeteer Chromium does not exist in expected location: /usr/local/bin/node_modules/puppeteer/.local-chromium/linux-768783/chrome-linux/chrome
+🛈 INFO  stencila Setup complete.
+⚠ WARN  encoda html Properties of `Article` not supported by encode: `editors`, `dateReceived`, `dateAccepted`, `isPartOf`, `licenses`, `keywords`, `fundedBy`, `bibliography`
+🚨 ERROR stencila givenNames.map is not a function
 
 
 ** Questions
