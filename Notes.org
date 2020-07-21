@@ -66,6 +66,9 @@ Generates a folder containing images but no html file. Output is:
 ⚠ WARN  encoda html Properties of `Article` not supported by encode: `editors`, `dateReceived`, `dateAccepted`, `isPartOf`, `licenses`, `keywords`, `fundedBy`, `bibliography`
 🚨 ERROR stencila givenNames.map is not a function
 
+Error probably caused by format of the YAML header (the region marked by ---).
+
+Replace YAML with original. Running stencil convert now generates a html file.
 
 
 
