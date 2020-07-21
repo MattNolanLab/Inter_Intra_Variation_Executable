@@ -31,6 +31,7 @@ Bookdown appears unable to references code chunks (see here: https://github.com/
 
 For links to work it seems the label an only be text (e.g. no spaces, symbols, etc).
 
+
 *** Download the Stencila app
 
 See instructions here: https://github.com/stencila/stencila#linux
@@ -64,6 +65,8 @@ Generates a folder containing images but no html file. Output is:
 🛈 INFO  stencila Setup complete.
 ⚠ WARN  encoda html Properties of `Article` not supported by encode: `editors`, `dateReceived`, `dateAccepted`, `isPartOf`, `licenses`, `keywords`, `fundedBy`, `bibliography`
 🚨 ERROR stencila givenNames.map is not a function
+
+
 
 
 ** Questions
