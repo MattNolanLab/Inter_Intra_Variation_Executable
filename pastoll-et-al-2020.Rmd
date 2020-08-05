@@ -201,7 +201,7 @@ fundedBy:
 references: pastoll-et-al-2020.references.bib
 ---
 
-```{r Setup, warning=FALSE, message=FALSE}
+```{r General setup, warning=FALSE, message=FALSE}
 # The packages broomExtra, corpcor must also be installed.
 library(tidyverse)
 library(cowplot)
@@ -273,6 +273,105 @@ data.sc_r <- data.sc_r %>%
   mutate(mm_vsris = map(data, model_vsris))%>%
   mutate(mm_vsris_null = map(data, model_vsris_null))
 ```
+
+```{r Clustering params setup, warning=FALSE, message=FALSE}
+# General clustering parameters.
+k.max <- 8 # Maximum number of clusters
+
+# d.power is the  power to raise Euclidian distances to. Default is 1, Tibshirani used 2.
+# NB: changing this requires the threshold fit initial parameter guess values to be changed according to the comments in the 'fit_thresholds' function. 
+d.power <- 2 
+
+iter.max <- 100 # Maximum iterations the kmeans algorithm will run. Default is 10
+nstart <- 50 # The number of times the kmeans algorithm initialises. Total stability needs > 200
+
+# Threshold parameters
+threshold_criterion=0.01 # Specify false positive rate for each evaluated k
+
+# Parameters for uniform sampled simulated datasets. For calculating thresholds and calculated 
+# reference dispersions.
+sim_unif_dataset_sizes <- seq(from=20, to=100, by=10) # A wide range is useful for stable fits
+sim_unif_n_sims <- 20000 # >10000 provides sufficienty good fits
+
+# Parameters for example multimodal simulation illustration of clustering with different k
+mm_sims <- list()
+mm_sims$n_ex_modes <- 5 # Number of clusters
+mm_sims$ex_mode_sep_sd <- c(3.5, 4, 4.5, 5, 5.5, 6) # Separations between cluster centers
+
+# Parameters for evaluating cluster detection sensitivity 
+mm_sims$n <- 5000 # Simulated datasets per combination of factors. 5000 provides stable results.
+mm_sims$sep_sd_max <- 6 # Range of separations of standard deviations to evaluate
+mm_sims$sep_sd_min <- 3
+mm_sims$sep_sd_incr <- 0.5
+
+mm_sims$n_data_max <- 70 # Range of multimodal dataset sizes to evaluate.
+mm_sims$n_data_min <- 20
+mm_sims$n_data_incr <- 10
+
+mm_sims$k_max <- 8 # Range of numbers of clusters (k) to evaluate
+mm_sims$k_min <- 2
+mm_sims$k_incr <- 1
+
+# Other variables (help with import, categorisation and plotting)
+mouse_ind <- 8 # Mouse to visualise clustering for. Takes integer values.
+
+props_subthresh <- c("vm", "ir", "sag", "tau", "resf", "resmag")
+props_suprathresh <- c("spkthr", "spkmax", "spkhlf", "rheo", "ahp", "fi")
+property_names <- c(props_subthresh, props_suprathresh)
+props_sub_labels <- c("vm"="Vm", "ir"="IR", "sag"="Sag", "tau"="Mem. tau", 
+                    "resf"="Res. freq.", "resmag"="Res. mag.")
+props_supra_labels <- c("spkthr"="Spk. thresh.", "spkmax"="Spk. max.",
+                        "spkhlf"="Spk. halfwidth", "rheo"="Rheobase", "ahp"="AHP", "fi"="FI")
+property_labels <- c(props_sub_labels, props_supra_labels)
+```
+
+
+```{r Clustering gap data setup}
+# Generate simulated delta gap data. If sim_unif_n_sims is high this will take a long time 
+# to run. Will look for a loaded version of slopes_store, then for a saved version.
+# If it finds neither then will build slopes_store (and dispersion_store).
+if(exists("delta_gaps_store")){
+  print("delta_gaps_store already generated, remove it if you want to rebuild or reload it")
+  if (NROW(delta_gaps_store) != sim_unif_n_sims){
+    warning("Number of simulated uniform datasets differs from parameter value")
+  }
+} else {
+  if (file.exists("GapData/unif_sims_delta_gaps_and_dispersions.Rda")) {
+    load("GapData/unif_sims_delta_gaps_and_dispersions.Rda")
+    print("Loaded simulated delta gaps and dispersions")
+    if (NROW(delta_gaps_store) != sim_unif_n_sims){
+      warning("Number of simulated uniform datasets differs from parameter value")
+    }
+  } else {
+    # Create unif_sims_delta_gaps_and_dispersions.Rda
+    gen_unif_sims(sim_unif_n_sims, sim_unif_dataset_sizes, k.max=k.max, d.power=d.power) 
+    # Load 'delta_gaps_store' and 'dispersion_store' variables
+    load("GapData/unif_sims_delta_gaps_and_dispersions.Rda") 
+  }
+}
+```
+
+
+```{r, echo=TRUE}
+# Fitting the delta gap thresholds and dispersions
+# It's important to check after each regeneration of simulated data that the threshold fits are appropriate. With less than 10000 runs, the thresholds can be quite noisy and it's possible that the fits won't converge. The form of the fitted equations is $y = (a/n^{b}) + c$, where $n$ is the number of data points in the evaluated dataset and $a, b, c$ are the parameters to be fitted.
+# 
+# In addition, to speed up evaluation of the reference dispersion to calculate the modified gap statistic k_est, it's also possible to fit the dispersions obtained from the simulated data and reuse this information so that multiple bootstrap samples don't have to be drawn for every evaluated dataset. Dispersion fits use a different fitting equation: $y = a*log(n) + b$, where $a, b$ are the parameters to be fitted. 
+
+# Get the delta gap thresholds (and the delta gaps themselves for plotting)
+delta_gaps_thresholds <- get_delta_gaps_thresh_vals(delta_gaps_store, 
+                                                    threshold_criterion=threshold_criterion)
+# Fit delta_slope_thresh_vals
+threshold_fit_results <- fit_thresholds(wd, delta_gaps_thresholds, sim_unif_dataset_sizes)
+
+# Find the average dispersion for each k across all simulations (prevents having to re-simulate
+# several uniform distributions every time the modified gap statistic is evaluated)
+mean_dispersions <- get_mean_dispersions(dispersion_store)
+# Fit mean_dispersions with log function
+dispersion_fit_results <- fit_dispersions(wd, mean_dispersions, sim_unif_dataset_sizes)
+
+```
+
 
 
 # Introduction
@@ -802,6 +901,76 @@ The dorsoventral organization of SC integrative properties is well established, 
 ![](pastoll-et-al-2020.Rmd.media/fig6.jpg){fig.cap="(ref:figure6)"}
 
 (ref:figure6) Figure 6. **Significant modularity is not detectable for any measured property.** (**A, B**) Histograms showing the k~est ~(${\displaystyle \hat{\mathrm{k}}}$) counts across all mice for each different measured sub-threshold (**A**) and supra-threshold (**B**) intrinsic property. The maximum k evaluated was 8. The proportion of each measured property with k~est~>1 was compared using binomial tests (with N = 15) to the proportion expected if the underlying distribution of that property is always clustered with all separation between modes ≥5 standard deviations (pink text), or if the underlying distribution of the property is uniform (purple text). For all measured properties, the values of k~est~ (${\displaystyle \hat{\mathrm{k}}}$) were indistinguishable (p>0.05) from the data generated from a uniform distribution and differed from the data generated from a multi-modal distribution (p&lt;1×10^−6^).
+
+Executable version of Figure 6A: \@ref(fig:Figure6A)
+Executable version of Figure 6B: \@ref(fig:Figure6B)
+
+
+```{r Figure6A, fig.cap="A"}
+# Evaluate the stellate cell (sc) data for k_est
+fname <- "Data/datatable_sc.txt"
+sc_data <- read_tsv(fname, col_types = cols(.default="d", mlpos="c", hemi="c", 
+                                            id="c", housing="c", expr="c", patchdir="c"))
+
+sc_data_long <- sc_data %>% filter(totalcells >= 30) %>% select(property_names, id, dvloc) %>% gather(key="property", value="measurement", property_names, na.rm=TRUE)
+
+# Initialise list to store tibbles for cluster evaluation of each combination of animal 
+# and measured property 
+sc_cluster_data_list <- list()
+list_ind <- 0L # To track the list index inside the double loop
+
+for (m in unique(sc_data_long$id)){
+  for (p in property_names){
+    # The data for one measured property for a single animal
+    data <- sc_data_long %>% filter(id==m, property==p)
+    
+    # Use the fitted parameters to obtain thresholds and dispersions. Note that where there 
+    # are measurement NAs in the original data, they will have already been removed, so the 
+    # fits are for the right dataset size. 
+    thresholds <- get_thresh_from_params(data, k.max,
+                                         threshold_fit_results$thresh_params[[1]])
+    dispersions <- get_dispersions_from_params(data, k.max,
+                                               dispersion_fit_results$dispersion_params[[1]])
+    
+    # The clustering evaluation outputs
+    cluster_out <- get_k_est(data$measurement, kmeans, iter.max=iter.max, nstart=nstart,
+                                K.max=k.max, B=NULL, d.power=d.power, thresholds=thresholds,
+                                dispersions=dispersions)
+    
+    # Construct tibble that combines cluster evaluation output with other data in long format
+    list_ind <- list_ind + 1 # Increment list index counter
+    dimnames(cluster_out$cluster)[[2]] <- as.integer(1:k.max) # to set 'as.tibble()' behaviour
+    sc_cluster_data_list[[list_ind]] <- as.tibble(cluster_out$cluster) %>% bind_cols(data) %>% 
+      mutate(k_est=rep(cluster_out$k_est, nrow(cluster_out$cluster))) %>%
+      gather(key="k_eval", value="cluster", dimnames(cluster_out$cluster)[[2]]) 
+  }
+}
+# Aggregated data in long format. Most granular level is single measurement cluster membership
+# for a specified k. This is the main input to further SC data analyses. 
+sc_cluster_data_long <- bind_rows(sc_cluster_data_list) %>% 
+  mutate(k_eval=as.integer(k_eval), cluster=as.factor(cluster)) %>% # Change class for plotting
+  mutate(prop_type=case_when(property %in% props_subthresh ~ "subthr", TRUE ~ "suprathr"))
+
+# Plot k_est counts for subthreshold and suprathreshold properties
+(clusters_a <- sc_cluster_data_long %>% filter(prop_type=="subthr") %>% distinct(id, property, k_est) %>% 
+  ggplot() + geom_bar(aes(x=k_est)) + 
+  facet_wrap(vars(property), ncol=6, labeller=as_labeller(props_sub_labels)) +
+  labs(y="Count", x=" ") + 
+  scale_x_continuous(labels=c(rep(" ", k.max)), breaks=1:k.max,
+                     limits=c(0.5, k.max+0.5)))
+```
+
+```{r Figure6B, fig.cap="B"}
+# Required Figure 6A to gave been generated first
+(clusters_b <- sc_cluster_data_long %>% filter(prop_type=="suprathr") %>% 
+  distinct(id, property, k_est) %>% 
+  ggplot() + geom_bar(aes(x=k_est)) + 
+  facet_wrap(vars(property), ncol=6, labeller=as_labeller(props_supra_labels))+
+  labs(x=bquote(~"Estimated number of clusters, "~k[est]), y="Count") +
+  scale_x_continuous(labels=c("1", rep("", k.max-2), toString(k.max)), breaks=1:k.max,
+                     limits=c(0.5, k.max+0.5)))
+```
+
 
 When we investigated the other measured integrative properties, we also failed to find evidence for modularity. Across all properties, for any given property, at most 3 out of 15 mice were evaluated as having a clustered organization using the modified gap statistic ([Figure 6](#fig6)). This does not differ significantly from the proportion expected by chance when no modularity is present (p>0.05, binomial test). Consistent with this, the average proportion of datasets evaluated as modular across all measured features was 0.072 ± 0.02 (± SEM), which is similar to the expected false-positive rate. By contrast, the properties of grid firing fields previously recorded with tetrodes in behaving animals (@bib71) were detected as having a modular organization using the modified gap statistic ([Figure 1—figure supplement 5](#fig1s5)). For seven grid-cell datasets with n ≥ 20, the mean for p~detect~ is 0.86, with 95% confidence intervals of 0.42 to 0.996. We note here that discontinuity algorithms that were previously used to assess the modularity of grid field properties (@bib32; @bib71) did indicate significant modularity in the majority of the intrinsic properties measured in our dataset (N = 13/15 and N = 12/15, respectively), but this was attributable to false positives resulting from the relatively even sampling of recording locations (see [Figure 1—figure supplement 4A](#fig1s4)). Therefore, we conclude that it is unlikely that any of the intrinsic integrative properties of SCs that we examined have organization within individual animals resembling the modular organization of grid cells in behaving animals.
 
