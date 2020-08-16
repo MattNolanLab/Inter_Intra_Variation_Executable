@@ -256,9 +256,6 @@ data.wfs_r <- filter(data.wfs, classification == "Pyr") %>%
   group_by(property) %>%
   nest()
 
-```
-
-```{r Fit mixed effect models}
 # This is required for Figure 4D, E, 7B and Table 1.
 # Code is here as it only needs to be run once.
 
@@ -276,9 +273,7 @@ model_vsris_null <- function(df) {
 data.sc_r <- data.sc_r %>%
   mutate(mm_vsris = map(data, model_vsris))%>%
   mutate(mm_vsris_null = map(data, model_vsris_null))
-```
 
-```{r Clustering params setup, warning=FALSE, message=FALSE}
 # General clustering parameters.
 k.max <- 8 # Maximum number of clusters
 
@@ -348,10 +343,8 @@ props_supra_labels <-
     "fi" = "FI"
   )
 property_labels <- c(props_sub_labels, props_supra_labels)
-```
 
 
-```{r Clustering gap data setup}
 # Generate simulated delta gap data. If sim_unif_n_sims is high this will take a long time
 # to run. Will look for a loaded version of slopes_store, then for a saved version.
 # If it finds neither then will build slopes_store (and dispersion_store).
@@ -377,10 +370,7 @@ if (exists("delta_gaps_store")) {
     load("GapData/unif_sims_delta_gaps_and_dispersions.Rda")
   }
 }
-```
 
-
-```{r, echo=TRUE}
 # Fitting the delta gap thresholds and dispersions
 # It's important to check after each regeneration of simulated data that the threshold fits are appropriate. With less than 10000 runs, the thresholds can be quite noisy and it's possible that the fits won't converge. The form of the fitted equations is $y = (a/n^{b}) + c$, where $n$ is the number of data points in the evaluated dataset and $a, b, c$ are the parameters to be fitted.
 # 
