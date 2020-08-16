@@ -201,6 +201,10 @@ fundedBy:
 references: pastoll-et-al-2020.references.bib
 ---
 
+# Introduction
+
+The concept of cell types provides a general organizing principle for understanding biological structures including the brain (@bib65; @bib84). The simplest conceptualization of a neuronal cell type, as a population of phenotypically similar neurons with features that cluster around a single set point (@bib79), is extended by observations of variability in cell type features, suggesting that some neuronal cell types may be conceived as clustering along a line rather than around a point in a feature space (@bib19; @bib55; [Figure 1A](#fig1)). Correlations between the functional organization of sensory, motor and cognitive circuits and the electrophysiological properties of individual neuronal cell types suggest that this feature variability underlies key neural computations (@bib1; @bib3; @bib24; @bib28; @bib30; @bib46; @bib55). However, within-cell type variability has typically been deduced by combining data obtained from multiple animals. By contrast, the structure of variation within individual animals or between different animals has received little attention. For example, apparent clustering of properties along lines in feature space could reflect a continuum of set points, or could result from a small number of discrete set points that are obscured by inter-animal variation ([Figure 1B](#fig1)). Moreover, although investigations of invertebrate nervous systems show that set points may differ between animals (@bib36), it is not clear whether mammalian neurons exhibit similar phenotypic diversity ([Figure 1B](#fig1)). Distinguishing these possibilities requires many more electrophysiological observations for each animal than are obtained in typical studies.
+
 ```{r General setup, warning=FALSE, message=FALSE}
 # The packages broomExtra, corpcor must also be installed.
 library(tidyverse)
@@ -252,9 +256,6 @@ data.wfs_r <- filter(data.wfs, classification == "Pyr") %>%
   group_by(property) %>%
   nest()
 
-```
-
-```{r Fit mixed effect models}
 # This is required for Figure 4D, E, 7B and Table 1.
 # Code is here as it only needs to be run once.
 
@@ -272,9 +273,7 @@ model_vsris_null <- function(df) {
 data.sc_r <- data.sc_r %>%
   mutate(mm_vsris = map(data, model_vsris))%>%
   mutate(mm_vsris_null = map(data, model_vsris_null))
-```
 
-```{r Clustering params setup, warning=FALSE, message=FALSE}
 # General clustering parameters.
 k.max <- 8 # Maximum number of clusters
 
@@ -344,10 +343,8 @@ props_supra_labels <-
     "fi" = "FI"
   )
 property_labels <- c(props_sub_labels, props_supra_labels)
-```
 
 
-```{r Clustering gap data setup}
 # Generate simulated delta gap data. If sim_unif_n_sims is high this will take a long time
 # to run. Will look for a loaded version of slopes_store, then for a saved version.
 # If it finds neither then will build slopes_store (and dispersion_store).
@@ -373,10 +370,7 @@ if (exists("delta_gaps_store")) {
     load("GapData/unif_sims_delta_gaps_and_dispersions.Rda")
   }
 }
-```
 
-
-```{r, echo=TRUE}
 # Fitting the delta gap thresholds and dispersions
 # It's important to check after each regeneration of simulated data that the threshold fits are appropriate. With less than 10000 runs, the thresholds can be quite noisy and it's possible that the fits won't converge. The form of the fitted equations is $y = (a/n^{b}) + c$, where $n$ is the number of data points in the evaluated dataset and $a, b, c$ are the parameters to be fitted.
 # 
@@ -400,20 +394,12 @@ dispersion_fit_results <-
 
 ```
 
+chunkfigure: Figure 1A
+:::
+```{r}
+#' @width 9
+#' @height 9
 
-
-# Introduction
-
-The concept of cell types provides a general organizing principle for understanding biological structures including the brain (@bib65; @bib84). The simplest conceptualization of a neuronal cell type, as a population of phenotypically similar neurons with features that cluster around a single set point (@bib79), is extended by observations of variability in cell type features, suggesting that some neuronal cell types may be conceived as clustering along a line rather than around a point in a feature space (@bib19; @bib55; [Figure 1A](#fig1)). Correlations between the functional organization of sensory, motor and cognitive circuits and the electrophysiological properties of individual neuronal cell types suggest that this feature variability underlies key neural computations (@bib1; @bib3; @bib24; @bib28; @bib30; @bib46; @bib55). However, within-cell type variability has typically been deduced by combining data obtained from multiple animals. By contrast, the structure of variation within individual animals or between different animals has received little attention. For example, apparent clustering of properties along lines in feature space could reflect a continuum of set points, or could result from a small number of discrete set points that are obscured by inter-animal variation ([Figure 1B](#fig1)). Moreover, although investigations of invertebrate nervous systems show that set points may differ between animals (@bib36), it is not clear whether mammalian neurons exhibit similar phenotypic diversity ([Figure 1B](#fig1)). Distinguishing these possibilities requires many more electrophysiological observations for each animal than are obtained in typical studies.
-
-![](pastoll-et-al-2020.Rmd.media/fig1.jpg){fig.cap="(ref:figure1)"}
-
-(ref:figure1) Figure 1. **Classification and variability of neuronal cell types.** (**A**) Neuronal cell types are identifiable by features clustering around a distinct point (blue, green and yellow) or a line (orange) in feature space. The clustering implies that neuron types are defined by either a single set point (blue, green and yellow) or by multiple set points spread along a line (orange). (**B**) Phenotypic variability of a single neuron type could result from distinct set points that subdivide the neuron type but appear continuous when data from multiple animals are combined (modular), from differences in components of a set point that do not extend along a continuum but that in different animals cluster at different locations in feature space (orthogonal), or from differences between animals in the range covered by a continuum of set points (offset). These distinct forms of variability can only be made apparent by measuring the features of many neurons from multiple animals.
-
-Executable version of Figure 1A: \@ref(fig:Figure1A)
-Executable version of Figure 1B: \@ref(fig:Figure1B)
-
-```{r Figure1A, fig.cap="A"}
 # Make cell distributions for each 'cell type'
 numcells <- 100
 Cell_A <- tibble(x = rnorm(numcells, 10, 1),
@@ -446,10 +432,19 @@ CF_plot <- ggplot(CellFeatures, aes(x, y, colour = cell)) +
         axis.text = element_blank(),
         legend.text = element_blank())
 CF_plot
-
 ```
+---
 
-```{r Figure1B, warning=FALSE, fig.cap="B"}
+## Classification and variability of neuronal cell types
+
+(**A**) Neuronal cell types are identifiable by features clustering around a distinct point (blue, green and yellow) or a line (orange) in feature space. The clustering implies that neuron types are defined by either a single set point (blue, green and yellow) or by multiple set points spread along a line (orange).
+:::
+{#fig1a}
+
+
+chunkfigure: Figure 1B
+:::
+```{r}
 # Example 'modular' data
 numcells <- 20
 MF_A <- tibble(x = c(rnorm(numcells, 26, 0.5), rnorm(numcells, 31, 0.5), rnorm(numcells, 36, 0.5)),
@@ -507,30 +502,66 @@ IntraAnimalPlot <- ggplot(IntraAnimal, aes(x, y, alpha = animal)) +
   theme(legend.position = "bottom",
         legend.text = element_blank())
 
-IntraAnimalPlot
+print(IntraAnimalPlot)
 ```
+---
+
+## Classification and variability of neuronal cell types
+
+(**B**) Phenotypic variability of a single neuron type could result from distinct set points that subdivide the neuron type but appear continuous when data from multiple animals are combined (modular), from differences in components of a set point that do not extend along a continuum but that in different animals cluster at different locations in feature space (orthogonal), or from differences between animals in the range covered by a continuum of set points (offset). These distinct forms of variability can only be made apparent by measuring the features of many neurons from multiple animals.
+:::
+{#fig1b}
 
 
+figure: Figure 1—figure supplement 1
+:::
+![](pastoll-et-al-2020.Rmd.media/fig1-figsupp1.jpg)
 
-![](pastoll-et-al-2020.Rmd.media/fig1-figsupp1.jpg){fig.cap="(ref:figure1figuresupplement1)"}
+## A quantitative adaptation of the gap statistic clustering algorithm.
 
-(ref:figure1figuresupplement1) Figure 1—figure supplement 1. **A quantitative adaptation of the gap statistic clustering algorithm.** (**A–C**) Logic of the gap statistic. (**A**) Simulated clustered dataset with three modes (k = 3) (open gray circles) (upper) and the corresponding simulated reference dataset drawn from a uniform distribution with lower and upper limits set by the minimum and maximum values from the corresponding clustered dataset (open gray diamonds). Data were allocated to clusters by running a K-means algorithm 20 times on each set of data and selecting the partition with the lowest average intracluster dispersion. Red, green, blue and yellow dashed ovals show a realization of the data subsets allocated to each cluster when k~Eval~ = 1, 2, 3 and 4 modes. (**B**) The average value of the log intracluster dispersion for the clustered (open circles) and reference (open diamonds) datasets for each value of k tested in panel (**A**). (**C**) Gap values resulting from the difference between the clustered and reference values for each k in panel (**B**). Many (≥500 in this paper) reference distributions are generated and their mean intracluster dispersion values are subtracted from those arising from the clustered distribution to maximize the reliability of the Gap values. (**D**) A procedure for selecting the optimal k depending on the associated gap values. Quantitative procedure for selecting optimal k (k~est~). ∆Gap values (open circles) are obtained by subtracting from the Gap value of a given k the Gap value for the previous k (∆Gap~k~ = Gap~k~ – Gap~k-1~). For each ∆Gap~k~, if the ∆Gap value is greater than a threshold (filled triangles) associated with that ∆Gap~k~, that ∆Gap~k~ will be k~est~, if no ∆Gap exceeds, the threshold, k~est~ = 1. In the figure, for ∆Gap~k~ = 2, 3, 4 (brown, pink and cyan), the ∆Gap value exceeds its threshold only when ∆Gap~k~ = 3. Therefore k~est~ = 3. (**E–G**) Determination of ∆Gap~k~ thresholds. (**E**) Histograms of ∆Gap values calculated from 20,000 simulated datasets drawn from uniform distributions for each ∆Gap~k~ (brown, pink and cyan, respectively, for ∆Gap~k~ = 2, 3, 4) for a single dataset size (n = 40). ∆Gap thresholds (filled triangles) are the values beyond which 1% of the ∆Gap values fall and vary with ∆Gap~k~. (**F**) Histograms of ∆Gap values for a range of dataset sizes (n = 20, 40, 100) and their associated thresholds. (**G**) Plot of the ∆Gap thresholds as a function of dataset size and ∆Gap~k~. For separate ∆Gap~k~, ∆Gap threshold values are fitted well by a hyperbolic function of dataset size. These fits provide a practical method of finding the appropriate ∆Gap threshold for an arbitrary dataset size.
+(**A–C**) Logic of the gap statistic. (**A**) Simulated clustered dataset with three modes (k = 3) (open gray circles) (upper) and the corresponding simulated reference dataset drawn from a uniform distribution with lower and upper limits set by the minimum and maximum values from the corresponding clustered dataset (open gray diamonds). Data were allocated to clusters by running a K-means algorithm 20 times on each set of data and selecting the partition with the lowest average intracluster dispersion. Red, green, blue and yellow dashed ovals show a realization of the data subsets allocated to each cluster when k~Eval~ = 1, 2, 3 and 4 modes. (**B**) The average value of the log intracluster dispersion for the clustered (open circles) and reference (open diamonds) datasets for each value of k tested in panel (**A**). (**C**) Gap values resulting from the difference between the clustered and reference values for each k in panel (**B**). Many (≥500 in this paper) reference distributions are generated and their mean intracluster dispersion values are subtracted from those arising from the clustered distribution to maximize the reliability of the Gap values. (**D**) A procedure for selecting the optimal k depending on the associated gap values. Quantitative procedure for selecting optimal k (k~est~). ∆Gap values (open circles) are obtained by subtracting from the Gap value of a given k the Gap value for the previous k (∆Gap~k~ = Gap~k~ – Gap~k-1~). For each ∆Gap~k~, if the ∆Gap value is greater than a threshold (filled triangles) associated with that ∆Gap~k~, that ∆Gap~k~ will be k~est~, if no ∆Gap exceeds, the threshold, k~est~ = 1. In the figure, for ∆Gap~k~ = 2, 3, 4 (brown, pink and cyan), the ∆Gap value exceeds its threshold only when ∆Gap~k~ = 3. Therefore k~est~ = 3. (**E–G**) Determination of ∆Gap~k~ thresholds. (**E**) Histograms of ∆Gap values calculated from 20,000 simulated datasets drawn from uniform distributions for each ∆Gap~k~ (brown, pink and cyan, respectively, for ∆Gap~k~ = 2, 3, 4) for a single dataset size (n = 40). ∆Gap thresholds (filled triangles) are the values beyond which 1% of the ∆Gap values fall and vary with ∆Gap~k~. (**F**) Histograms of ∆Gap values for a range of dataset sizes (n = 20, 40, 100) and their associated thresholds. (**G**) Plot of the ∆Gap thresholds as a function of dataset size and ∆Gap~k~. For separate ∆Gap~k~, ∆Gap threshold values are fitted well by a hyperbolic function of dataset size. These fits provide a practical method of finding the appropriate ∆Gap threshold for an arbitrary dataset size.
+:::
 
-![](pastoll-et-al-2020.Rmd.media/fig1-figsupp2.jpg){fig.cap="(ref:figure1figuresupplement2)"}
 
-(ref:figure1figuresupplement2) Figure 1—figure supplement 2. **Discrimination of continuous from modular organizations using the adapted gap statistic algorithm.** (**A**) Simulated datasets (each n = 40) drawn from continuous (uniform, k = 1 mode) (upper) and modular (multimodal mixture of Gaussians with k = 2 modes) (lower) distributions, and plotted against simulated dorsoventral locations. Also shown are the probability density functions (pdf) used to generate each dataset (light blue) and the densities estimated post-hoc from the generated data as kernel smoothed densities (light gray pdfs). (**B**) Histograms showing the distribution of k~est~ from 1000 simulated datasets drawn from each pdf in panel (**A**). k~est~ is determined for each dataset by a modified gap statistic algorithm (see [Figure 1—figure supplement 1](#fig1s1) above). When k~est~ = 1, the dataset is considered to be continuous (unclustered), when k~est~ ≥2, the dataset is considered to be modular (clustered). The algorithm operates only on the feature values and does not use location information. (**C**) Illustration of a set of clustered (k = 2) pdfs with the distance (in standard deviations) between clusters ranging from 2 to 6 (upper). Systematic evaluation of the ability of the modified gap statistic algorithm to detect clustered organization (k~est~ ≥2) in simulated datasets of different size (n = 20 to 100) drawn from the clustered (filled blue) and continuous (open blue) pdfs (lower). The proportion of datasets drawn from the continuous distribution that have k~est~ ≥2 is the false positive (FP) rate (pFP = ~0.07). The light gray filled circle shows the smallest dataset size (n = 40) with SD = 5, where the proportion of datasets detected as clustered (p~detect~) is ~0.8. (**D**). Plot showing how p~detect~ at n = 40, SD = 5 changes when datasets are drawn from pdfs with different numbers of clusters (n modes from 2 to 8). Further evaluation of the analysis of additional clusters is represented in the following figure.
+figure: Figure 1—figure supplement 2
+:::
+![](pastoll-et-al-2020.Rmd.media/fig1-figsupp2.jpg)
 
-![](pastoll-et-al-2020.Rmd.media/fig1-figsupp3.jpg){fig.cap="(ref:figure1figuresupplement3)"}
+## Discrimination of continuous from modular organizations using the adapted gap statistic algorithm.
 
-(ref:figure1figuresupplement3) Figure 1—figure supplement 3. **Additional evaluation of the adapted gap statistic algorithm.** (**A–C**) Plots showing how p~detect~ (the ability of the modified gap statistic algorithm to detect clustered organization) depends on dataset size and separation between cluster modes in simulated datasets drawn from clustered pdfs with different numbers of modes. The gray markers indicate n = 40, SD = 5 (as shown in [Figure 1E](#fig1)). In each plot, p~detect~ is shown as a function of simulated dataset size and separation between modes when k = 3 (**A**), k = 5 (**B**) and k = 8 (**C**), which was the maximum number of clusters evaluated. (**D–F**) Histograms showing the counts of k~est~ from the 1000 simulated n = 40, SD = 5 datasets (gray filled circles) illustrated in panels (**A–C**), respectively. (**G**) p~detect~ as a function of dataset size and mode separation with k = 5 when cluster modes are unevenly sampled. Sample sizes from clusters vary randomly with each dataset. A single mode can contribute from all to none of the points in any simulated dataset. (**H**) p~detect~ as a function of dataset size and mode separation with k = 5 when the distance between mode centers increases by a factor of sqrt(2) between sequential cluster pairs. Data are shown for different initial separations (the distance between the first two cluster centers) ranging from 1 to 4 (with corresponding separations between the final cluster pair ranging from 4 to 16).
+(**A**) Simulated datasets (each n = 40) drawn from continuous (uniform, k = 1 mode) (upper) and modular (multimodal mixture of Gaussians with k = 2 modes) (lower) distributions, and plotted against simulated dorsoventral locations. Also shown are the probability density functions (pdf) used to generate each dataset (light blue) and the densities estimated post-hoc from the generated data as kernel smoothed densities (light gray pdfs). (**B**) Histograms showing the distribution of k~est~ from 1000 simulated datasets drawn from each pdf in panel (**A**). k~est~ is determined for each dataset by a modified gap statistic algorithm (see [Figure 1—figure supplement 1](#fig1s1) above). When k~est~ = 1, the dataset is considered to be continuous (unclustered), when k~est~ ≥2, the dataset is considered to be modular (clustered). The algorithm operates only on the feature values and does not use location information. (**C**) Illustration of a set of clustered (k = 2) pdfs with the distance (in standard deviations) between clusters ranging from 2 to 6 (upper). Systematic evaluation of the ability of the modified gap statistic algorithm to detect clustered organization (k~est~ ≥2) in simulated datasets of different size (n = 20 to 100) drawn from the clustered (filled blue) and continuous (open blue) pdfs (lower). The proportion of datasets drawn from the continuous distribution that have k~est~ ≥2 is the false positive (FP) rate (pFP = ~0.07). The light gray filled circle shows the smallest dataset size (n = 40) with SD = 5, where the proportion of datasets detected as clustered (p~detect~) is ~0.8. (**D**). Plot showing how p~detect~ at n = 40, SD = 5 changes when datasets are drawn from pdfs with different numbers of clusters (n modes from 2 to 8). Further evaluation of the analysis of additional clusters is represented in the following figure.
+:::
 
-![](pastoll-et-al-2020.Rmd.media/fig1-figsupp4.jpg){fig.cap="(ref:figure1figuresupplement4)"}
 
-(ref:figure1figuresupplement4) Figure 1—figure supplement 4. **Comparing the adapted gap statistic algorithm with discontinuity measures for discreteness.** (**A**) Counts of log discontinuity ratio scores generated from a simulated uniform data distribution. The data distribution was ordered and then sampled either at positions drawn at random from a uniform distribution (dark blue) or at positions with a fixed increment (light blue). For the data sampled at random positions, approximately half of the scores are >0 and for even sampling all scores are >0. Therefore, a threshold score >0 does not distinguish discrete from continuous distributions. (**B**) Comparison of p~detect~ as a function of dataset size for the adapted gap statistic algorithm, the discontinuity (upper) and the discreteness algorithm (lower). Each algorithm is adjusted to yield a 7% false positive rate. Each column shows simulations of data with different numbers of modes (k).
+figure: Figure 1—figure supplement 3
+:::
+![](pastoll-et-al-2020.Rmd.media/fig1-figsupp3.jpg)
 
-![](pastoll-et-al-2020.Rmd.media/fig1-figsupp5.jpg){fig.cap="(ref:figure1figuresupplement5)"}
+## Additional evaluation of the adapted gap statistic algorithm.
 
-(ref:figure1figuresupplement5) Figure 1—figure supplement 5. **Evaluation of modularity of grid firing using an adapted gap statistic algorithm.** Examples of grid spacing for individual neurons (crosses) from different mice. Kernel smoothed densities (KSDs) were generated with either a wide (solid gray) or a narrow (dashed lines) kernel. The number of modes estimated using the modified gap statistic algorithm is ≥ 2 for all but one animal (animal 4) with n ≥ 20 (animals 3 and 7 have &lt; 20 recorded cells). We did not have location information for animal 2.
+(**A–C**) Plots showing how p~detect~ (the ability of the modified gap statistic algorithm to detect clustered organization) depends on dataset size and separation between cluster modes in simulated datasets drawn from clustered pdfs with different numbers of modes. The gray markers indicate n = 40, SD = 5 (as shown in [Figure 1E](#fig1)). In each plot, p~detect~ is shown as a function of simulated dataset size and separation between modes when k = 3 (**A**), k = 5 (**B**) and k = 8 (**C**), which was the maximum number of clusters evaluated. (**D–F**) Histograms showing the counts of k~est~ from the 1000 simulated n = 40, SD = 5 datasets (gray filled circles) illustrated in panels (**A–C**), respectively. (**G**) p~detect~ as a function of dataset size and mode separation with k = 5 when cluster modes are unevenly sampled. Sample sizes from clusters vary randomly with each dataset. A single mode can contribute from all to none of the points in any simulated dataset. (**H**) p~detect~ as a function of dataset size and mode separation with k = 5 when the distance between mode centers increases by a factor of sqrt(2) between sequential cluster pairs. Data are shown for different initial separations (the distance between the first two cluster centers) ranging from 1 to 4 (with corresponding separations between the final cluster pair ranging from 4 to 16).
+:::
+
+
+figure: Figure 1—figure supplement 4
+:::
+![](pastoll-et-al-2020.Rmd.media/fig1-figsupp4.jpg)
+
+## Comparing the adapted gap statistic algorithm with discontinuity measures for discreteness.
+
+(**A**) Counts of log discontinuity ratio scores generated from a simulated uniform data distribution. The data distribution was ordered and then sampled either at positions drawn at random from a uniform distribution (dark blue) or at positions with a fixed increment (light blue). For the data sampled at random positions, approximately half of the scores are >0 and for even sampling all scores are >0. Therefore, a threshold score >0 does not distinguish discrete from continuous distributions. (**B**) Comparison of p~detect~ as a function of dataset size for the adapted gap statistic algorithm, the discontinuity (upper) and the discreteness algorithm (lower). Each algorithm is adjusted to yield a 7% false positive rate. Each column shows simulations of data with different numbers of modes (k).
+:::
+
+
+figure: Figure 1—figure supplement 5
+:::
+![](pastoll-et-al-2020.Rmd.media/fig1-figsupp5.jpg)
+
+## Evaluation of modularity of grid firing using an adapted gap statistic algorithm.
+
+Examples of grid spacing for individual neurons (crosses) from different mice. Kernel smoothed densities (KSDs) were generated with either a wide (solid gray) or a narrow (dashed lines) kernel. The number of modes estimated using the modified gap statistic algorithm is ≥ 2 for all but one animal (animal 4) with n ≥ 20 (animals 3 and 7 have &lt; 20 recorded cells). We did not have location information for animal 2.
+:::
+
 
 Stellate cells in layer 2 (SCs) of the medial entorhinal cortex (MEC) provide a striking example of correspondence between functional organization of neural circuits and variability of electrophysiological features within a single cell type. The MEC contains neurons that encode an animal’s location through grid-like firing fields (@bib27). The spatial scale of grid fields follows a dorsoventral organization (@bib42), which is mirrored by a dorsoventral organization in key electrophysiological features of SCs (@bib10; @bib21; @bib28; @bib30; @bib33; @bib58). Grid cells are further organized into discrete modules (@bib71), with the cells within a module having a similar grid scale and orientation (@bib6; @bib40; @bib71; @bib82); progressively more ventral modules are composed of cells with wider grid spacing (@bib71). Studies that demonstrate dorsoventral organization of integrative properties of SCs have so far relied on the pooling of relatively few measurements per animal. Hence, it is unclear whether the organization of these cellular properties is modular, as one might expect if they directly set the scale of grid firing fields in individual grid cells (@bib30). The possibility that set points for electrophysiological properties of SCs differ between animals has also not been considered previously.
 
@@ -544,23 +575,45 @@ We set out to establish the nature of the set points that establish the integra
 
 Before addressing intra- and inter-animal variability, we first describe the data set used for the analyses that follow. We established procedures to facilitate the recording of integrative properties of many SCs from a single animal (see 'Materials and methods'). With these procedures, we measured and analyzed electrophysiological features of 836 SCs (n/mouse: range 11–55; median = 35) from 27 mice (median age = 37 days, age range = 18–57 days). The mice were housed either in a standard home cage (dimensions: 0.2 × 0.37 m, N = 18 mice, n = 583 neurons) or from postnatal day 16 in a 2.4 × 1.2 m cage, which provided a large environment that could be freely explored (N = 9, n = 253, median age = 38 days) ([Figure 2—figure supplement 1](#fig2s1)). For each neuron, we measured six sub-threshold integrative properties ([Figure 2A–B](#fig2)) and six supra-threshold integrative properties ([Figure 2C](#fig2)). Unless indicated otherwise, we report the analysis of datasets that combine the groups of mice housed in standard and large home cages and that span the full range of ages.
 
-![](pastoll-et-al-2020.Rmd.media/fig2.jpg){fig.cap="(ref:figure2)"}
+figure: Figure 2
+:::
+![](pastoll-et-al-2020.Rmd.media/fig2.jpg)
 
-(ref:figure2) Figure 2. **Dorsoventral organization of intrinsic properties of stellate cells from a single animal.** (**A–C**) Waveforms (gray traces) and example responses (black traces) from a single mouse for step (**A**), ZAP (**B**) and ramp (**C**) stimuli (left). The properties derived from each protocol are shown plotted against recording location (each data point is a black cross) (right). KSDs with arbitrary bandwidth are displayed to the right of each data plot to facilitate visualization of the property’s distribution when location information is disregarded (light gray pdfs). (**A**) Injection of a series of current steps enables the measurement of the resting membrane potential (V~rest~) (**i**), the input resistance (IR) (ii), the sag coefficient (sag) (iii) and the membrane time constant (τ~m~) (iv). (**B**) Injection of ZAP current waveform enables the calculation of an impedance amplitude profile, which was used to estimate the resonance resonant frequency (Res. F) (**i**) and magnitude (Res. mag) (ii). (**C**) Injection of a slow current ramp enabled the measurement of the rheobase (i); the slope of the current-frequency relationship (I-F slope) (ii); using only the first five spikes in each response (enlarged zoom, lower left), the AHP minimum value (AHP~min~) (iii); the spike maximum (Spk. max) (iv); the spike threshold (Spk. thr.) (v); and the spike width at half height (Spk. HW) (vi).
+## Dorsoventral organization of intrinsic properties of stellate cells from a single animal.
 
-![](pastoll-et-al-2020.Rmd.media/fig2-figsupp1.jpg){fig.cap="(ref:figure2figuresupplement1)"}
+(**A–C**) Waveforms (gray traces) and example responses (black traces) from a single mouse for step (**A**), ZAP (**B**) and ramp (**C**) stimuli (left). The properties derived from each protocol are shown plotted against recording location (each data point is a black cross) (right). KSDs with arbitrary bandwidth are displayed to the right of each data plot to facilitate visualization of the property’s distribution when location information is disregarded (light gray pdfs). (**A**) Injection of a series of current steps enables the measurement of the resting membrane potential (V~rest~) (**i**), the input resistance (IR) (ii), the sag coefficient (sag) (iii) and the membrane time constant (τ~m~) (iv). (**B**) Injection of ZAP current waveform enables the calculation of an impedance amplitude profile, which was used to estimate the resonance resonant frequency (Res. F) (**i**) and magnitude (Res. mag) (ii). (**C**) Injection of a slow current ramp enabled the measurement of the rheobase (i); the slope of the current-frequency relationship (I-F slope) (ii); using only the first five spikes in each response (enlarged zoom, lower left), the AHP minimum value (AHP~min~) (iii); the spike maximum (Spk. max) (iv); the spike threshold (Spk. thr.) (v); and the spike width at half height (Spk. HW) (vi).
+:::
+{#fig2}
 
-(ref:figure2figuresupplement1) Figure 2—figure supplement 1. **Large environment for housing.** (**A, B**) The large cage environment viewed from above (**A**) and from inside (**B**).
+figure: Figure 2—figure supplement 1
+:::
+![](pastoll-et-al-2020.Rmd.media/fig2-figsupp1.jpg)
+
+
+## Large environment for housing.
+
+(**A, B**) The large cage environment viewed from above (**A**) and from inside (**B**).
+:::
 
 Because SCs are found intermingled with pyramidal cells in layer 2 (L2PCs), and as misclassification of L2PCs as SCs would probably confound investigation of intra-SC variation, we validated our criteria for distinguishing each cell type. To establish characteristic electrophysiological properties of L2PCs, we recorded from neurons in layer 2 that were identified by Cre-dependent marker expression in a _Wfs1_^Cre^ mouse line (@bib72). Expression of Cre in this line, and in a similar line (@bib44), labels L2PCs that project to the CA1 region of the hippocampus, but does not label SCs (@bib44; @bib72). We identified two populations of neurons in layer 2 of MEC that were labelled in _Wfs1_^Cre^ mice ([Figure 3A–C](#fig3)). The more numerous population had properties consistent with L2PCs ([Figure 3A,G](#fig3)) and could be separated from the unidentified population on the basis of a lower rheobase ([Figure 3C](#fig3)). The unidentified population had firing properties that were typical of layer 2 interneurons (@bib37). A principal component analysis (PCA) ([Figure 3D–F](#fig3)) clearly separated the L2PC population from the SC population, but did not identify subpopulations of SCs. The properties of the less numerous population were also clearly distinct from those of SCs ([Figure 3A,C](#fig3)). These data demonstrate that the SC population used for our analyses is distinct from other cell types also found in layer 2 of the MEC.
 
-![](pastoll-et-al-2020.Rmd.media/fig3.jpg){fig.cap="(ref:figure3)"}
 
-(ref:figure3) Figure 3. **Distinct and dorsoventrally organized properties of layer 2 stellate cells.** (**A**) Representative action potential after hyperpolarization waveforms from a SC (left), a pyramidal cell (middle) and an unidentified cell (right). The pyramidal and unidentified cells were both positively labelled in _Wfs1^C^_^re^ mice. (**B**) Plot of the first versus the second principal component from PCA of the properties of labelled neurons in _Wfs1_^Cre^ mice reveals two populations of neurons. (**C**) Histogram showing the distribution of rheobase values of cells positively labelled in _Wfs1_^Cre^ mice. The two groups identified in panel (B) can be distinguished by their rheobase. (**D**) Plot of the first two principal components from PCA of the properties of the L2PC (n = 44, green) and SC populations (n = 836, black). Putative pyramidal cells (x) and SCs (+) are colored according to their dorsoventral location (inset shows the scale). (**E**) Proportion of total variance explained by the first five principal components for the analysis in panel (**D**). (**F**) Histograms of the locations of recorded SCs (upper) and L2PCs (lower). (**G**) All values of measured features from all mice are plotted as a function of the dorsoventral location of the recorded cells. Lines indicate fits of a linear model to the complete datasets for SCs (black) and L2PCs (green). Putative pyramidal cells (x, green) and SCs (+, black). Adjusted R^2^ values use the same color scheme.
+figure: Figure 3
+:::
+![](pastoll-et-al-2020.Rmd.media/fig3.jpg)
 
-Executable version of Figure 3B: \@ref(fig:Figure3B)
+## Distinct and dorsoventrally organized properties of layer 2 stellate cells.
 
-```{r Figure3B, warning=FALSE, fig.cap="B"}
+(**A**) Representative action potential after hyperpolarization waveforms from a SC (left), a pyramidal cell (middle) and an unidentified cell (right). The pyramidal and unidentified cells were both positively labelled in _Wfs1^C^_^re^ mice. (**B**) Plot of the first versus the second principal component from PCA of the properties of labelled neurons in _Wfs1_^Cre^ mice reveals two populations of neurons. (**C**) Histogram showing the distribution of rheobase values of cells positively labelled in _Wfs1_^Cre^ mice. The two groups identified in panel (B) can be distinguished by their rheobase. (**D**) Plot of the first two principal components from PCA of the properties of the L2PC (n = 44, green) and SC populations (n = 836, black). Putative pyramidal cells (x) and SCs (+) are colored according to their dorsoventral location (inset shows the scale). (**E**) Proportion of total variance explained by the first five principal components for the analysis in panel (**D**). (**F**) Histograms of the locations of recorded SCs (upper) and L2PCs (lower). (**G**) All values of measured features from all mice are plotted as a function of the dorsoventral location of the recorded cells. Lines indicate fits of a linear model to the complete datasets for SCs (black) and L2PCs (green). Putative pyramidal cells (x, green) and SCs (+, black). Adjusted R^2^ values use the same color scheme.
+:::
+{#fig3}
+
+
+chunkfigure: Figure 3G—executable version
+:::
+```{r}
+#' @width 30
+#' @height 20
 plot_sc_wfs <- data.sc %>%
   select(vm:fi, dvlocmm) %>%
   mutate(classification = "SC")
@@ -569,12 +622,19 @@ plot_wfs <- data.wfs %>%
 plot_sc_wfs <- bind_rows(plot_sc_wfs, plot_wfs) %>%
   gather("property", "value", vm:fi)
 
-ggplot(plot_sc_wfs, aes(dvlocmm,value)) +
+figure_3 <- ggplot(plot_sc_wfs, aes(dvlocmm,value)) +
   geom_point(aes(colour = classification)) +
   facet_wrap(~property, scales = "free_y") +
   theme_classic() +
   theme(strip.background = element_blank())
+print(figure_3)
 ```
+---
+
+## Distinct and dorsoventrally organized properties of layer 2 stellate cells.
+
+(**G**) All values of measured features from all mice are plotted as a function of the dorsoventral location of the recorded cells. Lines indicate fits of a linear model to the complete datasets for SCs (black) and L2PCs (green). Putative pyramidal cells (x, green) and SCs (+, black). Adjusted R^2^ values use the same color scheme.
+:::
 
 
 To further validate the large SC dataset, we assessed the location-dependence of individual electrophysiological features, several of which have previously been found to depend on the dorso-ventral location of the recorded neuron (@bib10; @bib11; @bib28; @bib30; @bib58; @bib83). We initially fit the dependence of each feature on dorsoventral position using a standard linear regression model. We found substantial (adjusted R^2^ >0.1) dorsoventral gradients in input resistance, sag, membrane time constant, resonant frequency, rheobase and the current-frequency (I-F) relationship ([Figure 3G](#fig3)). In contrast to the situation in SCs, we did not find evidence for dorsoventral organization of these features in L2PCs ([Figure 3G](#fig3)). Thus, our large dataset replicates the previously observed dependence of integrative properties of SCs on their dorsoventral position, and shows that this location dependence further distinguishes SCs from L2PCs.
@@ -583,17 +643,13 @@ To further validate the large SC dataset, we assessed the location-dependence of
 
 To what extent does variability between the integrative properties of SCs at a given dorsoventral location arise from differences between animals? Comparing specific features between individual animals suggested that their distributions could be almost completely non-overlapping, despite consistent and strong dorsoventral tuning ([Figure 4A](#fig4)). If this apparent inter-animal variability results from the random sampling of a distribution determined by a common underlying set point, then fitting the complete data set with a mixed model in which animal identity is included as a random effect should reconcile the apparent differences between animals ([Figure 4B](#fig4)). In this scenario, the conditional R^2^ estimated from the mixed model, in other words, the estimate of variance explained by animal identity and location, should be similar to the marginal R^2^ value, which indicates the variance explained by location only. By contrast, if differences between animals contribute to experimental variability, the mixed model should predict different fitting parameters for each animal, and the estimated conditional R^2^ should be greater than the corresponding marginal R^2^ ([Figure 4C](#fig4)).
 
-![](pastoll-et-al-2020.Rmd.media/fig4.jpg){fig.cap="(ref:figure4)"}
 
-(ref:figure4) Figure 4. **Inter-animal variability and dependence on environment of intrinsic properties of stellate cells.** (**A**) Examples of rheobase as a function of dorsoventral position for two mice. (**B, C**) Each line is the fit of simulated data from a different subject for datasets in which there is no inter-subject variability (**B**) or in which intersubject variability is present (**C**). Fitting data from each subject independently with linear regression models suggests intersubject variation in both datasets (left). By contrast, after fitting mixed effect models (right) intersubject variation is no longer suggested for the dataset in which it is absent (**B**) but remains for the dataset in which it is present (**C**). (**D**) Each line is the fit of rheobase as a function of dorsoventral location for a single mouse. The fits were carried out independently for each mouse (left) or using a mixed effect model with mouse identity as a random effect (right). (**E**) The intercept (I), sum of the intercept and slope (I + S), and slopes realigned to a common intercept (right) for each mouse obtained by fitting mixed effect models for each property as a function of dorsoventral position.
+chunkfigure: Figure 4A—executable version
+:::
+```{r}
+#' @width 12
+#' @height 6
 
-Executable version of Figure 4A: \@ref(fig:Figure4A)
-Executable version of Figure 4B: \@ref(fig:Figure4B)
-Executable version of Figure 4C: \@ref(fig:Figure4C)
-Executable version of Figure 4D: \@ref(fig:Figure4D)
-Executable version of Figure 4E: \@ref(fig:Figure4E)
-
-```{r Figure4A, fig.cap="A"}
 (rheo_example <- ggplot(filter(data.sc, id == "mouse_20131106" | id == "mouse_20140113"), aes(dvloc, rheo)) +
   geom_point(aes(colour = id), shape = 3) +
   labs(x = "Location (µm)", y = "Rheobase (pA)", colour = "Mouse")) +
@@ -608,8 +664,20 @@ Executable version of Figure 4E: \@ref(fig:Figure4E)
   scale_colour_manual(labels = c("", ""), values = c("red", "blue"))
 
 ```
+---
 
+## Inter-animal variability and dependence on environment of intrinsic properties of stellate cells.
+
+(**A**) Examples of rheobase as a function of dorsoventral position for two mice.
+:::
+
+
+chunkfigure: Figure 4B,C,D
+:::
 ```{r Figure4B, warning=FALSE, message=FALSE, fig.cap="B"}
+#' @width 12
+#' @height 4
+
 # Generate simulated data
 
 # Makes properties for each subject
@@ -707,10 +775,8 @@ mm_without_predictplot <- mm_without_predictplot +
   labs(x = "", y = "")
 
 plot_grid(without_var_gp_gg, mm_without_predictplot)
-```
 
 
-```{r Figure4C, warning=FALSE, message=FALSE, fig.cap="C"}
 # Generate data simulating dorsoventral organisation with inter-animal variability
 with_var_gp <- make_real_vals(20, 0.2, 0.2)
 with_var_gp_data <- make_data(with_var_gp, 20, 1, 0.2)
@@ -759,10 +825,8 @@ mm_with_predictplot <- mm_with_predictplot +
   labs(y = "")
 
 plot_grid(with_var_gp_gg, mm_with_predictplot)
-```
 
 
-```{r Figure4D, warning=FALSE, message=FALSE, fig.cap="D"}
 # The code below requires mixed effect models to have been fit to data in data.sc_r
 
 # Rheobase predictions from fits with a standard linear model
@@ -789,8 +853,20 @@ mm_rheo_predictplot_mod <- mm_rheo_predictplot_mod +
 
 plot_grid(rheo_predictplot_mod, mm_rheo_predictplot_mod)
 ```
+---
 
+## Inter-animal variability and dependence on environment of intrinsic properties of stellate cells.
+
+(**B, C**) Each line is the fit of simulated data from a different subject for datasets in which there is no inter-subject variability (**B**) or in which intersubject variability is present (**C**). Fitting data from each subject independently with linear regression models suggests intersubject variation in both datasets (left). By contrast, after fitting mixed effect models (right) intersubject variation is no longer suggested for the dataset in which it is absent (**B**) but remains for the dataset in which it is present (**C**). (**D**) Each line is the fit of rheobase as a function of dorsoventral location for a single mouse. The fits were carried out independently for each mouse (left) or using a mixed effect model with mouse identity as a random effect (right).
+:::
+{#fig4bcd}
+
+chunkfigure: Figure 4E
+:::
 ```{r Figure4E, message=FALSE, warning=FALSE, fig.cap="E"}
+#' @width 25
+#' @height 25
+
 combined_intercepts_slopes <-
   prep_int_slopes(data.sc_r, "property", "mm_vsris")
 
@@ -836,8 +912,7 @@ labels_intercepts <-
     vm = "Vrest (mV)"
   )
 
-(
-  IS_figure <-
+print(
     ggplot(
       combined_intercepts_slopes,
       aes(x = measure, y = value_1, colour = housing)
@@ -876,16 +951,33 @@ labels_intercepts <-
     )
 )
 ```
+---
+
+## Inter-animal variability and dependence on environment of intrinsic properties of stellate cells.
+
+(**E**) The intercept (I), sum of the intercept and slope (I + S), and slopes realigned to a common intercept (right) for each mouse obtained by fitting mixed effect models for each property as a function of dorsoventral position.
+:::
+{#fig4e}
 
 
+figure: Figure 4—figure supplement 1
+:::
+![](pastoll-et-al-2020.Rmd.media/fig4-figsupp1.jpg)
 
-![](pastoll-et-al-2020.Rmd.media/fig4-figsupp1.jpg){fig.cap="(ref:figure4figuresupplement1)"}
+## Properties of SCs in medial and lateral slices.
 
-(ref:figure4figuresupplement1) Figure 4—figure supplement 1. **Properties of SCs in medial and lateral slices.** Membrane properties of SCs from slices containing more medial (blue) and more lateral (red) parts of the MEC plotted as a function of dorsal ventral position. Neurons from more medial slices had a higher spike threshold, a lower spike maximum and a less-negative spike after-hyperpolarization (see [Supplementary file 6](#supp6)). Properties are labelled as in [Figure 2](#fig2).
+Membrane properties of SCs from slices containing more medial (blue) and more lateral (red) parts of the MEC plotted as a function of dorsal ventral position. Neurons from more medial slices had a higher spike threshold, a lower spike maximum and a less-negative spike after-hyperpolarization (see [Supplementary file 6](#supp6)). Properties are labelled as in [Figure 2](#fig2).
+:::
+{#fig4}
+
 
 Fitting the experimental measures for each feature with mixed models suggests that differences between animals contribute substantially to the variability in properties of SCs. In contrast to simulated data in which inter-animal differences are absent ([Figure 4B](#fig4)), differences in fits between animals remained after fitting with the mixed model ([Figure 4D](#fig4)). This corresponds with expectations from fits to simulated data containing inter-animal variability ([Figure 4C](#fig4)). To visualize inter-animal variability for all measured features, we plot for each animal the intercept of the model fit (I), the predicted value at a location 1 mm ventral from the intercept (I+S), and the slope (lines) ([Figure 4E](#fig4)). Strikingly, even for features such as rheobase and input resistance (IR) that are highly tuned to a neurons’ dorsoventral position, the extent of variability between animals is similar to the extent to which the property changes between dorsal and mid-levels of the MEC.
 
 If set points that determine integrative properties of SCs do indeed differ between animals, then mixed models should provide a better account of the data than linear models that are generated by pooling data across all animals. Consistent with this, we found that mixed models for all electrophysiological features gave a substantially better fit to the data than linear models that considered all neurons as independent (adjusted p&lt;2×10^−17^ for all models, χ^2^ test, [Table 1](#table1)). Furthermore, even for properties with substantial (R^2^ value >0.1) dorsoventral tuning, the conditional R^2^ value for the mixed effect model was substantially larger than the marginal R^2^ value ([Figure 4D](#fig4) and [Table 1](#table1)). Together, these analyses demonstrate inter-animal variability in key electrophysiological features of SCs, suggesting that the set points that establish the underlying integrative properties differ between animals.
+
+**Table 1. Dependence of the electrophysiological features of SCs on dorsoventral position.**
+
+Key statistical parameters from analyses of the relationship between each measured electrophysiological feature and dorsoventral location. The data are ordered according to the marginal R2 for each property’s relationship with dorsoventral position. Slope is the population slope from fitting a mixed effect model for each feature with location as a fixed effect (mm−1), with p(slope) obtained by comparing this model to a model without location as a fixed effect (χ2 test). For all properties except the spike thereshold, the slope was unlikely to have arisen by chance (p<0.05). The marginal and conditional R2 values, and the minimum and maximum slopes across all mice, are obtained from the fits of mixed effect models that contain location as a fixed effect. The estimate p(vs linear) is obtained by comparing the mixed effect model containing location as a fixed effect with a corresponding linear model without random effects (χ2 test). The values of p(slope) and p(vs linear) were adjusted for multiple comparisons using the method of Benjamini and Hochberg (1995). Units for the slope measurements are units for the property mm−1. The data are from 27 mice.
 
 | Feature              | Slope    | P (slope) | Marginal R^2^ | Conditional R^2^ | Slope (min) | Slope (max) | P (vs linear) |
 | -------------------- | -------- | --------- | ------------- | ---------------- | ----------- | ----------- | ------------- |
@@ -922,19 +1014,23 @@ Inter-animal differences could arise if the health of the recorded neurons diff
 
 The dorsoventral organization of SC integrative properties is well established, but whether this results from within animal variation consistent with a small number of discrete set points that underlie a modular organization ([Figure 1B](#fig1)) is unclear. To evaluate modularity, we used datasets with n ≥ 34 SCs (N = 15 mice, median age = 37 days, age range = 18–43 days). We focus initially on rheobase, which is the property with the strongest correlation to dorsoventral location, and resonant frequency, which is related to the oscillatory dynamics underlying dorsoventral tuning in some models of grid firing (e.g. @bib14; @bib30). For n ≥ 34 SCs, we expect that if properties are modular, then this would be detected by the modified gap statistic in at least 50% of animals ([Figure 1—figure supplements 2C](#fig1s2) and [3](#fig1s3)). By contrast, we find that for datasets from the majority of animals, the modified gap statistic identifies only a single mode in the distribution of rheobase values ([Figure 5A](#fig5) and [Figure 6](#fig6)) (N = 13/15) and of resonant frequencies ([Figure 5B](#fig5) and [Figure 6](#fig6)) (N = 14/15), indicating that these properties have a continuous rather than a modular distribution. Consistent with this, smoothed distributions did not show clearly separated peaks for either property ([Figure 5](#fig5)). The mean and 95% confidence interval for the probability of evaluating a dataset as clustered (p~detect~) was 0.133 and 0.02–0.4 for rheobase and 0.067 and 0.002–0.32 for resonant frequency. These values of p~detect~ were not significantly different from the proportions expected given the false positive rate of 0.1 in the complete absence of clustering (p=0.28 and 0.66, binomial test). Thus, the rheobase and resonant frequency of SCs, although depending strongly on a neuron’s dorsoventral position, do not have a detectable modular organization.
 
-![](pastoll-et-al-2020.Rmd.media/fig5.jpg){fig.cap="(ref:figure5)"}
+figure: Figure 5
+:::
+![](pastoll-et-al-2020.Rmd.media/fig5.jpg)
 
-(ref:figure5) Figure 5. **Rheobase and resonant frequency do not have a detectable modular organization.** (**A, B**) Rheobase (**A**) and resonant frequency (**B**) are plotted as a function of dorsoventral position separately for each animal. Marker color and type indicate the age and housing conditions of the animal (‘+’ standard housing, ‘x’ large housing). KSDs (arbitrary bandwidth, same for all animals) are also shown. The number of clusters in the data (k~est~) is indicated for each animal (${\displaystyle \hat{\mathrm{k}}}$).
+## Rheobase and resonant frequency do not have a detectable modular organization.
 
-![](pastoll-et-al-2020.Rmd.media/fig6.jpg){fig.cap="(ref:figure6)"}
-
-(ref:figure6) Figure 6. **Significant modularity is not detectable for any measured property.** (**A, B**) Histograms showing the k~est ~(${\displaystyle \hat{\mathrm{k}}}$) counts across all mice for each different measured sub-threshold (**A**) and supra-threshold (**B**) intrinsic property. The maximum k evaluated was 8. The proportion of each measured property with k~est~>1 was compared using binomial tests (with N = 15) to the proportion expected if the underlying distribution of that property is always clustered with all separation between modes ≥5 standard deviations (pink text), or if the underlying distribution of the property is uniform (purple text). For all measured properties, the values of k~est~ (${\displaystyle \hat{\mathrm{k}}}$) were indistinguishable (p>0.05) from the data generated from a uniform distribution and differed from the data generated from a multi-modal distribution (p&lt;1×10^−6^).
-
-Executable version of Figure 6A: \@ref(fig:Figure6A)
-Executable version of Figure 6B: \@ref(fig:Figure6B)
+(**A, B**) Rheobase (**A**) and resonant frequency (**B**) are plotted as a function of dorsoventral position separately for each animal. Marker color and type indicate the age and housing conditions of the animal (‘+’ standard housing, ‘x’ large housing). KSDs (arbitrary bandwidth, same for all animals) are also shown. The number of clusters in the data (k~est~) is indicated for each animal (${\displaystyle \hat{\mathrm{k}}}$).
+:::
+{#fig5}
 
 
+chunkfigure: Figure 6
+:::
 ```{r Figure6A, fig.cap="A"}
+#' @width 25
+#' @height 10
+
 # Note that reference data in GapData is generated through simulation. It was re-generated for the executable manuscript and so plots may look slightly different to the original manuscript. The conclusions are robust to the seeds for data generation. The reference data is loaded/generated with the setup code above (see block: "Clustering Gap Data Setup").
 
 # Evaluate the stellate cell (sc) data for k_est
@@ -1027,9 +1123,7 @@ sc_cluster_data_long <- bind_rows(sc_cluster_data_list) %>%
       limits = c(0.5, k.max + 0.5)
     )
 )
-```
 
-```{r Figure6B, fig.cap="B"}
 # Required Figure 6A to gave been generated first
 (
   clusters_b <-
@@ -1052,6 +1146,13 @@ sc_cluster_data_long <- bind_rows(sc_cluster_data_list) %>%
     )
 )
 ```
+---
+
+## Significant modularity is not detectable for any measured property.
+
+(**A, B**) Histograms showing the k~est ~(${\displaystyle \hat{\mathrm{k}}}$) counts across all mice for each different measured sub-threshold (**A**) and supra-threshold (**B**) intrinsic property. The maximum k evaluated was 8. The proportion of each measured property with k~est~>1 was compared using binomial tests (with N = 15) to the proportion expected if the underlying distribution of that property is always clustered with all separation between modes ≥5 standard deviations (pink text), or if the underlying distribution of the property is uniform (purple text). For all measured properties, the values of k~est~ (${\displaystyle \hat{\mathrm{k}}}$) were indistinguishable (p>0.05) from the data generated from a uniform distribution and differed from the data generated from a multi-modal distribution (p&lt;1×10^−6^).
+:::
+{#fig6}
 
 
 When we investigated the other measured integrative properties, we also failed to find evidence for modularity. Across all properties, for any given property, at most 3 out of 15 mice were evaluated as having a clustered organization using the modified gap statistic ([Figure 6](#fig6)). This does not differ significantly from the proportion expected by chance when no modularity is present (p>0.05, binomial test). Consistent with this, the average proportion of datasets evaluated as modular across all measured features was 0.072 ± 0.02 (± SEM), which is similar to the expected false-positive rate. By contrast, the properties of grid firing fields previously recorded with tetrodes in behaving animals (@bib71) were detected as having a modular organization using the modified gap statistic ([Figure 1—figure supplement 5](#fig1s5)). For seven grid-cell datasets with n ≥ 20, the mean for p~detect~ is 0.86, with 95% confidence intervals of 0.42 to 0.996. We note here that discontinuity algorithms that were previously used to assess the modularity of grid field properties (@bib32; @bib71) did indicate significant modularity in the majority of the intrinsic properties measured in our dataset (N = 13/15 and N = 12/15, respectively), but this was attributable to false positives resulting from the relatively even sampling of recording locations (see [Figure 1—figure supplement 4A](#fig1s4)). Therefore, we conclude that it is unlikely that any of the intrinsic integrative properties of SCs that we examined have organization within individual animals resembling the modular organization of grid cells in behaving animals.
@@ -1062,18 +1163,13 @@ Finally, because many of the measured electrophysiological features of SCs emerg
 
 Estimation of conditional independence for measurements at the level of individual neurons ([Figure 7A](#fig7)) or individual animals ([Figure 7B](#fig7)) was consistent with the expectation that particular classes of membrane ion channels influence multiple electrophysiologically measured features. The first five dimensions of a principal components analysis (PCA) of all measured electrophysiological features accounted for almost 80% of the variance ([Figure 7C](#fig7)). Examination of the rotations used to generate the principal components suggested relationships between individual features that are consistent with our evaluation of the conditional independence structure of the measured features ([Figure 7D and A](#fig7)). When we fit the principal components using mixed models with location as a fixed effect and animal identity as a random effect, we found that the first two components depended significantly on dorsoventral location ([Figure 7E](#fig7) and [Supplementary file 14](#supp14)) (marginal R^2^ = 0.50 and 0.09 and adjusted p=1.09×10^−15^ and 1.05 × 10^−4^, respectively). Thus, the dependence of multiple electrophysiological features on dorsoventral position may be reducible to two core mechanisms that together account for much of the variability between SCs in their intrinsic electrophysiology.
 
-![](pastoll-et-al-2020.Rmd.media/fig7.jpg){fig.cap="(ref:figure7)"}
 
-(ref:figure7) Figure 7. **Feature relationships and inter-animal variability after reducing dimensionality of the data.** (**A, B**) Partial correlations between the electrophysiological features investigated at the level of individual neurons (**A**) and at the level of animals (**B**). Partial correlations outside of the 95% basic bootstrap confidence intervals are color coded. Non-significant correlations are colored white. Properties shown are the resting membrane potential (Vm), input resistance (IR), membrane potential sag response (sag), membrane time constant (Tm), resonance frequency (Rm), resonance magnitude (Rm), rheobase (Rheo), slope of the current frequency relationship (FI), peak of the action potential after hyperpolarization (AHP), peak of the action potential (Smax) voltage threshold for the action potential (Sthr) and half-width of the action potential (SHW). (**C**) Proportion of variance explained by each principal component. To remove variance caused by animal age and the experimenter identity, the principal component analysis used a reduced dataset obtained by one experimenter and restricted to animals between 32 and 45 days old (N = 25, n = 572). (**D**) Loading plot for the first two principal components. (**E**) The first five principal components plotted as a function of position. (**F**) Intercept (I), intercept plus the slope (I + S) and slopes aligned to the same intercept, for fits for each animal of the first five principal components to a mixed model with location as a fixed effect and animal as a random effect.
-
-Executable version of Figure 7A: \@ref(fig:Figure7A)
-Executable version of Figure 7B: \@ref(fig:Figure7B)
-Executable version of Figure 7C: \@ref(fig:Figure7C)
-Executable version of Figure 7D: \@ref(fig:Figure7D)
-Executable version of Figure 7E: \@ref(fig:Figure7E)
-Executable version of Figure 7F: \@ref(fig:Figure7F)
-
+chunkfigure: Figure 7A
+:::
 ```{r Figure7A, warning=FALSE, fig.cap="A"}
+#' @width 8
+#' @height 8
+
 data.sc_neurons <- data.sc %>% dplyr::select(vm:fi) %>%
   na.omit
 Q_neurons <- calcQ(data.sc_neurons)
@@ -1131,8 +1227,20 @@ rownames(Q_neurons) <- new_names
     )
 )
 ```
+---
+## Feature relationships and inter-animal variability after reducing dimensionality of the data.
 
+(**A**) Partial correlations between the electrophysiological features investigated at the level of individual neurons. Partial correlations outside of the 95% basic bootstrap confidence intervals are color coded. Non-significant correlations are colored white. Properties shown are the resting membrane potential (Vm), input resistance (IR), membrane potential sag response (sag), membrane time constant (Tm), resonance frequency (Rm), resonance magnitude (Rm), rheobase (Rheo), slope of the current frequency relationship (FI), peak of the action potential after hyperpolarization (AHP), peak of the action potential (Smax) voltage threshold for the action potential (Sthr) and half-width of the action potential (SHW).
+:::
+{#fig7a}
+
+
+chunkfigure: Figure 7B
+:::
 ```{r Figure7B, warning=FALSE, fig.cap="B"}
+#' @width 8
+#' @height 8
+
 data_summary.mm_vsris <- prep_int_slopes_PCA(data.sc_r, "property", "mm_vsris")
 
 data_intercepts <-  spread(data_summary.mm_vsris[,1:3], property, ind_intercept)
@@ -1156,8 +1264,20 @@ rownames(Q_intercepts) <- new_names
 (Q_intercepts_plot <- ggcorr(data = NULL, cor_matrix = Q_intercepts, geom = "circle", min_size = 0, max_size = 5, legend.size = 7, size = 2))
 
 ```
+---
+## Feature relationships and inter-animal variability after reducing dimensionality of the data.
 
-```{r Fiugre7C, fig.cap="C"}
+(**B**) Partial correlations between the electrophysiological features investigated at the level of animals. Partial correlations outside of the 95% basic bootstrap confidence intervals are color coded. Non-significant correlations are colored white. Properties shown are the resting membrane potential (Vm), input resistance (IR), membrane potential sag response (sag), membrane time constant (Tm), resonance frequency (Rm), resonance magnitude (Rm), rheobase (Rheo), slope of the current frequency relationship (FI), peak of the action potential after hyperpolarization (AHP), peak of the action potential (Smax) voltage threshold for the action potential (Sthr) and half-width of the action potential (SHW).
+:::
+{#fig7b}
+
+
+chunkfigure: Figure 7C
+:::
+```{r Figure7C, fig.cap="C"}
+#' @width 8
+#' @height 8
+
 data.pca <- dplyr::select(data.sc, vm:fi, dvlocmm, id, housing, id, mlpos, hemi, sex, age, housing, expr, patchdir, rectime) %>%
   filter(age > 32 & age <45 & expr == "HP")
 
@@ -1174,15 +1294,39 @@ prop.var.df$components <- 1:12
   ylab("Proportion of variance") +
     theme(title = element_text(size = 9), axis.text = element_text(size = 9)))
 ```
+---
+## Feature relationships and inter-animal variability after reducing dimensionality of the data.
 
+(**C**) Proportion of variance explained by each principal component. To remove variance caused by animal age and the experimenter identity, the principal component analysis used a reduced dataset obtained by one experimenter and restricted to animals between 32 and 45 days old (N = 25, n = 572).
+:::
+{#fig7c}
+
+
+chunkfigure: Figure 7D
+:::
 ```{r Figure7D, fig.cap="D"}
+#' @width 8
+#' @height 8
+
 # Requires Figure 7C to have been generated.
 (all.pca.biplot <- pca_biplot(as.data.frame(all.pca$rotation), fontsize = 2, order_names = order_names, new_names = c("Vm", "IR", "Sag", "Tm", "Res. F", "Res. Mag.", "Rheo", "FI", "AHPmax", "Spk. max", "Spk. thr", "Spk. HW")) +
     theme(text = element_text(size = 9)) +
     xlim(-0.5, 0.55))
 ```
+---
+## Feature relationships and inter-animal variability after reducing dimensionality of the data.
 
+(**D**) Loading plot for the first two principal components.
+:::
+{#fig7d}
+
+
+chunkfigure: Figure 7E
+:::
 ```{r Figure7E, fig.cap="E"}
+#' @width 13
+#' @height 7
+
 all.pca.x <- bind_cols(as_tibble(all.pca$x), drop_na(data.pca, fi))
 
 out.pca.x_g1_5 <- all.pca.x %>%
@@ -1200,8 +1344,20 @@ out.pca.x_g1_5 <- all.pca.x %>%
     theme(legend.position = "bottom")
 )
 ```
+---
+## Feature relationships and inter-animal variability after reducing dimensionality of the data.
 
+(**E**) The first five principal components plotted as a function of position. (**F**) Intercept (I), intercept plus the slope (I + S) and slopes aligned to the same intercept, for fits for each animal of the first five principal components to a mixed model with location as a fixed effect and animal as a random effect.
+:::
+{#fig7e}
+
+
+chunkfigure: Figure 7F
+:::
 ```{r Figure7F, warning=FALSE, fig.cap="F"}
+#' @width 13
+#' @height 6
+
 # Reform data for use with dplyr.
 out.pca.x_g <- all.pca.x %>%
   gather("component", "value", 1:12) %>%
@@ -1249,7 +1405,7 @@ combined_intercepts_slopes_PCA$component_factors = factor(
 )
 
 # Plot the figure
-(IS_figure_PCA_1_5 <-
+print(
   ggplot(
     subset(
       combined_intercepts_slopes_PCA,
@@ -1276,10 +1432,15 @@ combined_intercepts_slopes_PCA$component_factors = factor(
     axis.ticks.x = element_blank(),
     axis.text.x = element_text(angle = 90)
   ) +
-  theme(legend.position = "none"))
-
+  theme(legend.position = "none")
+)
 ```
+---
+## Feature relationships and inter-animal variability after reducing dimensionality of the data.
 
+(**F**) Intercept (I), intercept plus the slope (I + S) and slopes aligned to the same intercept, for fits for each animal of the first five principal components to a mixed model with location as a fixed effect and animal as a random effect.
+:::
+{#fig7f}
 
 
 Is inter-animal variation present in PCA dimensions that account for dorsoventral variation? The intercept, but not the slope of the dependence of the first two principal components on dorsoventral position depended on housing (adjusted p=0.039 and 0.027) ([Figure 7E,F](#fig7) and [Supplementary file 15](#supp15)). After accounting for housing, the first two principal components were still better fit by models that include animal identity as a random effect (adjusted p=3.3×10^−9^ and 4.1 × 10^−86^), indicating remaining inter-animal differences in these components ([Supplementary file 16](#supp16)). A further nine of the next ten higher-order principal components did not depend on housing (adjusted p>0.1) ([Supplementary file 15](#supp15)), while eight differed significantly between animals (adjusted p&lt;0.05) ([Supplementary file 16](#supp16)).
@@ -1290,9 +1451,16 @@ Together, these analyses indicate that the dorsoventral organization of multipl
 
 Phenotypic variation is found across many areas of biology (@bib29), but has received little attention in investigations of mammalian nervous systems. We find unexpected inter-animal variability in SC properties, suggesting that the integrative properties of neurons are determined by set points that differ between animals and are controlled at a circuit level ([Figure 8](#fig8)). Continuous, location-dependent organization of set points for SC integrative properties provides new constraints on models for grid cell firing. More generally, the existence of inter-animal differences in set points has implications for experimental design and raises new questions about how the integrative properties of neurons are specified.
 
-![](pastoll-et-al-2020.Rmd.media/fig8.jpg){fig.cap="(ref:figure8)"}
+figure: Figure 8
+:::
+![](pastoll-et-al-2020.Rmd.media/fig8.jpg)
 
-(ref:figure8) Figure 8. **Models for intra- and inter-animal variation.** (**A**) The configuration of a cell type can be conceived of as a trough (arrow head) in a developmental landscape (solid line). In this scheme, the trough can be considered as a set point. Differences between cells (filled circles) reflect variation away from the set point. (**B**) Neurons from different animals or located at different dorsoventral positions can be conceptualized as arising from different troughs in the developmental landscape. (**C**) Variation may reflect inter-animal differences in factors that establish gradients (upper left) and in factors that are uniformly distributed (lower left), combining to generate set points that depend on animal identity and location (right). Each line corresponds to schematized properties of a single animal.
+## Models for intra- and inter-animal variation.
+
+(**A**) The configuration of a cell type can be conceived of as a trough (arrow head) in a developmental landscape (solid line). In this scheme, the trough can be considered as a set point. Differences between cells (filled circles) reflect variation away from the set point. (**B**) Neurons from different animals or located at different dorsoventral positions can be conceptualized as arising from different troughs in the developmental landscape. (**C**) Variation may reflect inter-animal differences in factors that establish gradients (upper left) and in factors that are uniformly distributed (lower left), combining to generate set points that depend on animal identity and location (right). Each line corresponds to schematized properties of a single animal.
+:::
+{#fig8}
+
 
 ## A conceptual framework for within cell type variability
 
