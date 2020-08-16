@@ -814,7 +814,9 @@ fit_thresholds <- function(wd, delta_gaps_thresholds, dataset_sizes){
   )
   #setwd(wd)
   # Save in current working directory
-  save(thresh_params, file="fitted_thresh_params.Rda")
+  # Wrapped in try in case the current directory is read only (as is
+  # currently the case for immutable project snapshots on Stencila Hub)
+  try(save(thresh_params, file="fitted_thresh_params.Rda"), silent=TRUE)
   return(fit_results)
 }  
 
@@ -840,7 +842,8 @@ fit_dispersions <- function(wd, dispersions, dataset_sizes){
   )
   # setwd(wd)
   # Save in current working directory
-  save(dispersion_params, file="fitted_dispersion_params.Rda")
+  # Wrapped in try in case the current directory is read only (see above)
+  try(save(dispersion_params, file="fitted_dispersion_params.Rda"), silent=TRUE)
   return(dispersion_fit_results)
 }  
 
