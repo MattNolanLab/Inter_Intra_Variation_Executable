@@ -622,11 +622,33 @@ plot_wfs <- data.wfs %>%
 plot_sc_wfs <- bind_rows(plot_sc_wfs, plot_wfs) %>%
   gather("property", "value", vm:fi)
 
+labels_intercepts <-
+  c(
+    ahp = "AHP min. (mV)",
+    fi = "F-I (Hz / pA)",
+    ir = "IR (MΩ)",
+    resf = "Res F (Hz)",
+    resmag = "Res. mag.",
+    rheo = "Rheobase (pA)",
+    sag = "Sag",
+    spkhlf = "Spike h-w (ms)",
+    spkmax = "Spike max. (mV)",
+    spkthr = "Spike thres. (mV)",
+    tau = "Tm (ms)",
+    vm = "Vrest (mV)"
+    )
+
 figure_3 <- ggplot(plot_sc_wfs, aes(dvlocmm,value)) +
   geom_point(aes(colour = classification)) +
-  facet_wrap(~property, scales = "free_y") +
+  scale_x_continuous(name = "Location (mm)",
+                     breaks = c(0, 1, 2)) +
+  scale_colour_discrete(name = "Neuron type") +
+  facet_wrap(~property,
+             scales = "free_y",
+             labeller = labeller(property = labels_intercepts)) +
   theme_classic() +
-  theme(strip.background = element_blank())
+  theme(axis.title.y = element_blank(),
+        strip.background = element_blank())
 print(figure_3)
 ```
 ---
